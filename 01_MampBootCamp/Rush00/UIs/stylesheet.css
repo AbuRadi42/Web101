@@ -1,0 +1,295 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    stylesheet.css                                     :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: saburadi <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2018/10/06 00:46:35 by saburadi          #+#    #+#              #
+#    Updated: 2018/10/06 00:46:39 by saburadi         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+html.body {
+	background-color: #5FC9D9;
+	display: flex;
+	height:100%;
+}
+
+.loginSquare {
+	text-align: center;
+	max-width:305px;
+	min-height:300px;
+	width: auto;
+	height: auto;
+	background-color: #505050;
+	border: 1px solid black;
+	border-radius: 22.5px;
+	margin-top: 9%;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.LIStxt {
+	width: 83.5%;
+	padding: 10px 20px;
+	border: 1px solid #2A7580;
+	border-radius: 5px;
+	padding-top: -24px; 
+	margin: 5px;
+}
+
+.LISbtn0 {
+	display: inline-flex;
+	width: 49.5%;
+	color: white;
+	padding: 10px 20px;
+	border: 1px solid white;
+	border-radius: 5px;
+	background-color: gray;
+	text-align: center;
+	cursor: pointer;
+	margin: 1px;
+	float: left;
+}
+
+.LISbtn1 {
+	display: inline-flex;
+	width: 48.5%;
+	color: white;
+	padding: 10px 20px;
+	border: 1px solid white;
+	border-radius: 5px;
+	background-color: gray;
+	text-align: center;
+	cursor: pointer;
+	margin: 1px;
+	margin-right: 1.25px;
+	float: right;
+}
+
+#upperSection {
+	background-color: #9B9C9D;
+	margin-top: 0px;
+	height: 240px;
+}
+
+#CustomerProfile {
+	background-color: #2A7580;
+	height: 240px;
+	width: 240px;
+	padding: 0px;
+}
+
+#leftButtonDiv {
+	padding-top: 7.5%;
+	padding-left: 7.5%;
+	margin-right: 74.5%;
+}
+
+#leftButton {
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	border-radius: 50%;
+	font-size: 24px;
+	height: 45px;
+	width: 45px;
+}
+
+#leftButton:hover {
+	background-color: #A8CEC5;
+}
+
+#profilpic {
+	position: relative;
+	left: 12.5%;
+	top: 12.5%;
+	height: 75%;
+	width: 75%;
+	margin-top: -13.5%;
+	border-radius: 50%;
+}
+
+
+#rightButtonDiv {
+	padding-bottom: 7.5%;
+	padding-right: 7.5%;
+	margin-top: -15.65%;
+	margin-left: 74.5%;
+}
+
+#rightButton {
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	position: relative;
+	border-radius: 50%;
+	font-size: 24px;
+	float: inherit;
+	height: 45px;
+	width: 45px;
+}
+
+#rightButton:hover {
+	background-color: #A8CEC5;
+}
+
+#columns {
+	margin-top: -250px;
+	margin-left: 250px;
+	flex: auto;
+	float: left;
+	color: black;
+}
+
+#Welcome {
+	font-family: cursive, "URW Chancery L", serif;
+	color: white;
+}
+
+#column {
+	width: 30%;
+	text-align: left;
+	font-family: cursive, "URW Chancery L", serif;
+	font-style: italic;
+	color: white;
+}
+
+#Busket {
+	font-family: cursive, "URW Chancery L", serif;
+	text-align: center;
+	color: white;
+}
+
+#lowerSection {
+	display: flex;
+}
+
+#infoside {
+	background-color: #505050;
+	margin-right: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	min-width: 240px;
+}
+
+#title {
+	font-family: cursive, "URW Chancery L", serif;
+	font-size: 21px;
+	text-align: center;
+	color: white;
+}
+
+#line {
+	text-align: center;
+	color: white;
+}
+
+#slip {
+	background-color: white;
+	margin-right: 5px;
+	border-radius: 7.5px;
+	width: 205px;
+}
+
+#tot {
+	margin-left: 9px;
+	padding-bottom: 9px;
+	text-align: left;
+}
+
+#foodlistrow {
+	margin-left: 240px;
+	float: right;
+	width: 100%;
+}
+
+#C0 {
+	width: 27%
+}
+
+#C1 {
+	display: inline-flex;
+	max-width:230px;
+	max-height:95px;
+	width: auto;
+	height: auto;
+}
+
+#item {
+	display: block;
+	border: 1px solid black;
+	margin: 5px;
+	border-radius: 22.5px;
+	max-width: 99%;
+	width: auto;
+	height: 191.25px;
+}
+
+#picture {
+	border-radius: 22.5px;
+	position: relative;
+	width: 99%;
+	height: 100%;
+	z-index: 0;
+}
+
+#plusButton {
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	border-radius: 48%;
+	font-size: 24px;
+	height: 45px;
+	width: 45px;
+	float: right;
+	font-size: 18px;
+	padding-top: 1px;
+	margin-top: -49px;
+	position: relative;
+	z-index: 1;
+}
+
+#plusButton:hover {
+	background-color: #A8CEC5;
+}
+
+#price {
+	font-family: cursive, "URW Chancery L", serif;
+	color: black;
+	float: left;
+	margin-left: 12.5px;
+	margin-top: -190px;
+	position: relative;
+	z-index: 1;
+}
+
+.form-popup {
+	display: none;
+	position: fixed;
+	top: 255px;
+	left: 15px;
+	width: 225px;
+	z-index: 9;
+}
+
+.form-container {
+	max-width: 300px;
+	padding: 10px;
+	background-color: grey;
+	border-radius: 22.5px;
+}
+
+.form-container .btn {
+	background-color: #4CAF50;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	border-radius: 10px;
+	margin-bottom:1px;
+	opacity: 0.9;
+}
+
+.form-container .cancel {
+	background-color: red;
+}

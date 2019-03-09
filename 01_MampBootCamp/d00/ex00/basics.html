@@ -1,0 +1,97 @@
+<!-- *********************************************************************** -->
+<!--                                                                         -->
+<!--                                                      :::      ::::::::  -->
+<!-- basics.html                                        :+:      :+:    :+:  -->
+<!--                                                  +:+ +:+         +:+    -->
+<!-- By: saburadi <marvin@42.fr>                    +#+  +:+       +#+       -->
+<!--                                              +#+#+#+#+#+   +#+          -->
+<!-- Created: 2018/10/01 10:05:19 by saburadi          #+#    #+#            -->
+<!-- Updated: 2018/10/01 10:13:49 by saburadi         ###   ########.fr      -->
+<!--                                                                         -->
+<!-- *********************************************************************** -->
+
+<style>
+body {
+	background-color: #FFBFBB;
+}
+
+h1 {
+	text-align: center;
+	font-size: 42px;
+	font-weight: 50%;
+	color: white;
+}
+
+/* font-size:
+calc([min size] + ([max size] - [min size]) * ((100vw - [min viewport width])
+/ ([max viewport width] - [min viewport width]))); (Responsive Font Size) */
+
+.row {
+	text-align: center;
+	display: flex;
+	width: 100%;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+
+.column {
+	flex: auto;
+	padding-top: 5px;
+	padding-right: 10px; /* right padding is always a struggle */
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+
+img {
+	border: 3.75px solid white;
+	border-radius: 9px;
+}
+
+.button {
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #E85AED;
+    color: white;
+}
+h5 {
+	font-family: "Monospace";
+	font-style: italic;
+	text-align: right;
+}
+</style>
+
+<head>
+ 	<h1>OnlineShops!</h1>
+</head>
+<body>
+	<div class="row">
+		<div class="column">
+			<img src="../srcs/Amazon.jpg" style="width:100%">
+		</div>
+		<div class="column">
+			<img src="../srcs/Walmart.jpg" style="width:100%">
+		</div>
+	</div>
+	<div class="row">
+		<div class="column">
+			<a href="https://www.amazon.com/">
+				<button class = "button" type="button">Go to Amazon</button>
+			</a>
+		</div>
+		<div class="column">
+			<a href="https://www.walmart.com/">
+				<button class = "button" type="button">Go to Walmart</button>
+			</a>
+		</div>
+	</div>
+	<hr size="pixels">
+	<h5>
+		&#169 Saburadi, 2018
+	</h5>
+</body>
