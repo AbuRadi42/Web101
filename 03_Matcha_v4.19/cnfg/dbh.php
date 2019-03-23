@@ -6,7 +6,7 @@
 
 		public static	$INSTANCE;
 		private			$db_username = "root";
-		private			$db_password = "MyPHPApp";
+		private			$db_password = "12345r";
 		private			$db_name = "Demo";
 		private			$dsn = "mysql:host=localhost";
 
@@ -27,7 +27,6 @@
 					$this->_pdo = $this->_pdo;
 					
 					$this->usrsTableCreate();
-					$this->imgsTableCreate();
 					self::$INSTANCE = $this;
 					error_log("Database init complete");
 				} catch(PDOException $e) { 
@@ -40,11 +39,23 @@
 			$this->_pdo->exec("CREATE TABLE IF NOT EXISTS `Demo`.`usrs`(
 			`Id` INT NOT NULL AUTO_INCREMENT ,
 			`userName` VARCHAR(255) NULL DEFAULT NULL ,
+			`fullName` VARCHAR(255) NULL DEFAULT NULL ,
 			`eMail` VARCHAR(255) NULL DEFAULT NULL ,
 			`passWord` VARCHAR(255) NULL DEFAULT NULL ,
 			`HashKey` VARCHAR(255) NULL DEFAULT NULL , 
-			`Activity` BOOLEAN NULL DEFAULT FALSE,
-			`toNotify` BOOLEAN NULL DEFAULT FALSE,
+			`Activity` BOOLEAN NULL DEFAULT FALSE ,
+			`toNotify` BOOLEAN NULL DEFAULT TRUE ,
+			`Gender` BOOLEAN NULL DEFAULT NULL ,
+			`Sexuality` VARCHAR(255) NULL DEFAULT NULL ,
+			`Biography` VARCHAR(255) NULL DEFAULT NULL ,
+			`Interests` VARCHAR(255) NULL DEFAULT NULL ,
+			`fameRate` VARCHAR(255) NULL DEFAULT NULL ,
+			`Location` VARCHAR(255) NULL DEFAULT NULL ,
+			`Img1` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
+			`Img2` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
+			`Img3` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
+			`Img4` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
+			`Img5` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
 			PRIMARY KEY (`Id`)) ENGINE = InnoDB;");
 		}
 
@@ -59,14 +70,18 @@
 				return FALSE;
 		}
 
-		public function userDetailsInsertion($userName, $eMail, $passWord, $HashKey, $toNotify) {
-			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`userName`, `eMail`, `passWord`, `HashKey`, `Activity`, `toNotify`)
-										VALUES (:userName, :eMail, :passWord, :HashKey, 0, :toNotify);");
+		public function userDetailsInsertion($userName, $fullName, $eMail, $passWord, $HashKey, $Gender, $Sexuality, $Biography, $Interests) {
+			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`userName`, `fullName`, `eMail`, `passWord`, `HashKey`, `Activity`, `toNotify`, `Gender`, `Sexuality`, `Biography`, `Interests`)
+										VALUES (:userName, :fullName, :eMail, :passWord, :HashKey, 0, 1, :Gender, :Sexuality, :Biography, :Interests);");
 			$query->bindParam(':userName', $userName, PDO::PARAM_STR);
+			$query->bindParam(':fullName', $fullName, PDO::PARAM_STR);
 			$query->bindParam(':eMail', $eMail, PDO::PARAM_STR);
 			$query->bindParam(':passWord', $passWord, PDO::PARAM_STR);
 			$query->bindParam(':HashKey', $HashKey, PDO::PARAM_STR);
-			$query->bindParam(':toNotify', $toNotify, PDO::PARAM_BOOL);
+			$query->bindParam(':Gender', $Gender, PDO::PARAM_STR);
+			$query->bindParam(':Sexuality', $Sexuality, PDO::PARAM_STR);
+			$query->bindParam(':Biography', $Biography, PDO::PARAM_STR);
+			$query->bindParam(':Interests', $Interests, PDO::PARAM_STR);
 			$query->execute();
 		}
 
@@ -129,23 +144,29 @@
 
 		//---
 
-		public function imgsTableCreate() {
-			$this->_pdo->exec("CREATE TABLE IF NOT EXISTS `Demo`.`imgs`(
-			`Id` INT NOT NULL AUTO_INCREMENT ,
-			`Img` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
-			`userId` VARCHAR(255) NULL DEFAULT NULL ,
-			PRIMARY KEY (`Id`)) ENGINE = InnoDB;");
-		}
-
-		public function imgIntoDBInsert($Img, $userId) {
-			$query = $this->_pdo->prepare("INSERT INTO `imgs` (`Img`, `userId`)VALUES (:Img, :userId);");
+		public function imgIntoDBInsert($Img, $userName) {
+			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`:ImgN`) VALUES (:Img) WHERE userName = :userName;");
 			$query->bindParam(":Img", $Img);
-			$query->bindParam(":userId", $userId);
+			$query->bindParam(":userName", $userName);
+			if (imgFromDBSelect("Img1") == NULL)
+				$query->bindParam(":ImgN", "Img1");
+			else if (imgFromDBSelect("Img2") == NULL)
+				$query->bindParam(":ImgN", "Img2");
+			else if (imgFromDBSelect("Img3") == NULL)
+				$query->bindParam(":ImgN", "Img3");
+			else if (imgFromDBSelect("Img4") == NULL)
+				$query->bindParam(":ImgN", "Img4");
+			else if (imgFromDBSelect("Img5") == NULL)
+				$query->bindParam(":ImgN", "Img5");
+			else
+				$query->bindParam(":ImgN", "Img5");
 			$query->execute();
 		}
 
-		public function imgFromDBSelect() {
-			$query = $this->_pdo->prepare("SELECT `Img` FROM `imgs` ORDER BY `Id` DESC");
+		public function imgFromDBSelect($ImgN, $userId) {
+			$query = $this->_pdo->prepare("SELECT `:ImgN` FROM `usrs` WHERE Id = :userId;");
+			$query->bindParam(":ImgN", $ImgN);
+			$query->bindParam(":userId", $userId);
 			$query->execute();
 			$rows = $query->fetchAll();
 			return ($rows);

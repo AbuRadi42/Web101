@@ -14,7 +14,7 @@
 <div class="page">
   <div class="container">
     <div class="left">
-      <div class="wlcmsg">Welcome to <a href="./index.php">Camagru</a>!</div>
+      <div class="wlcmsg">Welcome to <a href="./index.php">Matcha</a>!</div>
       <div class="login">Sign in;</div>
       <div class="eula">By signing up you agree to our <a href="#" title="Be Awesome!">terms & conditions</a>.</div>
       <div class="eulu">Made with keyboard by Sameh M. AbuRadi</div>

@@ -6,12 +6,17 @@
 	
 	new db_handle();
 
-	if ($_POST['signUp'] && $_POST['userName'] && $_POST['eMail'] && $_POST['passWord'] && $_POST['Repeat']) {
+	if ($_POST['signUp'] && $_POST['userName'] && $_POST['eMail'] && $_POST['passWord'] && $_POST['Repeat']
+	&& $_POST['fullName'] && $_POST['Gender'] != NULL && $_POST['Sexuality']) {
 		$userName = $_POST['userName'];
+		$fullName = $_POST['fullName'];
 		$eMail = $_POST['eMail'];
 		$passWord = $_POST['passWord'];
 		$Repeat = $_POST['Repeat'];
-		$toNotify = (isset($_POST['toNotify'])) ? 1 : 0;
+		$Gender = $_POST['Gender'];
+		$Sexuality = $_POST['Sexuality'];
+		$Biography = $_POST['Biography'];
+		$Interests = $_POST['Interests'];
 		if (!passWordMaches($passWord, $Repeat)) {
 			header('Location: ../completeSignup.php?input=passwords_dont_match');
 			return ;
@@ -26,7 +31,7 @@
 			$HashKey = hash('whirlpool', $passWord.$userName);
 			$HashPwd = hash('whirlpool', $passWord);
 			confirmationEmailSend($userName, $eMail, $HashKey);
-			$object->userDetailsInsertion($userName, $eMail, $HashPwd, $HashKey, $toNotify);
+			$object->userDetailsInsertion($userName, $fullName, $eMail, $HashPwd, $HashKey, $Gender, $Sexuality, $Biography, $Interests);
 			echo '<h5 style="text-align: center">Please check your eMail to activate your account.</h5>';
 			sleep(5);
 			header('Location: ../index.php');

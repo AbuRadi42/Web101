@@ -7,7 +7,7 @@
 		$uri = preg_replace('#^data:image/\w+;base64,#i', '',$_POST['img']);
 		if ($uri !== "") {
 			$obj = new db_handle();
-			$obj->imgIntoDBInsert($uri, $_SESSION['userName']['Id']);
+			$obj->imgIntoDBInsert($uri, $_SESSION['userName']);
 			header('Location: ../index.php?upload_succeed');
 		}
 		else

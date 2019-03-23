@@ -11,11 +11,12 @@
 </head>
 <body>
 <div class="header">
-  <a href="./index.php" class="logo">Camagru</a>
+  <a href="./index.php" class="logo">Matcha 4.2.0</a>
   <?php
       if (isset($_SESSION['userName'])) {
           echo '
               <div class="header-right">
+                <a href="./settings.php">Chat</a>
                 <a href="./imgUpload.php">Upload an Image</a>
                 <a href="./settings.php">Settings</a>
                 <a href="incs/signOut.inc.php?signOutSubmit='.$_SESSION['userName'].'">Sign Out</a>
