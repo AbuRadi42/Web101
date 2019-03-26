@@ -71,8 +71,8 @@
 		}
 
 		public function userDetailsInsertion($userName, $fullName, $eMail, $passWord, $HashKey, $Gender, $Sexuality, $Biography, $Interests) {
-			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`userName`, `fullName`, `eMail`, `passWord`, `HashKey`, `Activity`, `toNotify`, `Gender`, `Sexuality`, `Biography`, `Interests`)
-										VALUES (:userName, :fullName, :eMail, :passWord, :HashKey, 0, 1, :Gender, :Sexuality, :Biography, :Interests);");
+			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`userName`, `fullName`, `eMail`, `passWord`, `HashKey`, `Activity`, `toNotify`, `Gender`, `Sexuality`, `Biography`, `Interests`, `fameRate`)
+										VALUES (:userName, :fullName, :eMail, :passWord, :HashKey, 0, 1, :Gender, :Sexuality, :Biography, :Interests, 0);");
 			$query->bindParam(':userName', $userName, PDO::PARAM_STR);
 			$query->bindParam(':fullName', $fullName, PDO::PARAM_STR);
 			$query->bindParam(':eMail', $eMail, PDO::PARAM_STR);
@@ -173,7 +173,7 @@
 		}
 
 		public function imgFromDBFetch() {
-			$query = $this->_pdo->prepare("SELECT `Id`,`Img`,`userId` FROM `imgs` ORDER BY `Id` DESC");
+			$query = $this->_pdo->prepare("SELECT `Id`, `fullName`, `Img1`, `Img2`, `Img3`, `Img4`, `Img5` FROM `usrs` ORDER BY `Id` DESC");
 			$query->execute();
 			$rows = $query->fetchAll();
 			return ($rows);
