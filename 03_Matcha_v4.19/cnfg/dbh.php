@@ -27,6 +27,7 @@
 					$this->_pdo = $this->_pdo;
 					
 					$this->usrsTableCreate();
+					$this->whoLikesWhoTableCreate();
 					self::$INSTANCE = $this;
 					error_log("Database init complete");
 				} catch(PDOException $e) { 
@@ -44,18 +45,19 @@
 			`passWord` VARCHAR(255) NULL DEFAULT NULL ,
 			`HashKey` VARCHAR(255) NULL DEFAULT NULL , 
 			`Activity` BOOLEAN NULL DEFAULT FALSE ,
-			`toNotify` BOOLEAN NULL DEFAULT TRUE ,
-			`Gender` BOOLEAN NULL DEFAULT NULL ,
+			`Cnctvity` BOOLEAN NULL DEFAULT FALSE ,
+			`Gender` INT NULL DEFAULT NULL ,
 			`Sexuality` VARCHAR(255) NULL DEFAULT NULL ,
 			`Biography` VARCHAR(255) NULL DEFAULT NULL ,
 			`Interests` VARCHAR(255) NULL DEFAULT NULL ,
-			`fameRate` VARCHAR(255) NULL DEFAULT NULL ,
+			`fameRate` INT(255) NULL DEFAULT 0 ,
 			`Location` VARCHAR(255) NULL DEFAULT NULL ,
 			`Img1` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
 			`Img2` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
 			`Img3` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
 			`Img4` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
 			`Img5` LONGTEXT CHARACTER SET utf8 NULL DEFAULT NULL ,
+			`LastCnctTime` VARCHAR(255) NULL DEFAULT NULL ,
 			PRIMARY KEY (`Id`)) ENGINE = InnoDB;");
 		}
 
@@ -71,8 +73,8 @@
 		}
 
 		public function userDetailsInsertion($userName, $fullName, $eMail, $passWord, $HashKey, $Gender, $Sexuality, $Biography, $Interests) {
-			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`userName`, `fullName`, `eMail`, `passWord`, `HashKey`, `Activity`, `toNotify`, `Gender`, `Sexuality`, `Biography`, `Interests`, `fameRate`)
-										VALUES (:userName, :fullName, :eMail, :passWord, :HashKey, 0, 1, :Gender, :Sexuality, :Biography, :Interests, 0);");
+			$query = $this->_pdo->prepare("INSERT INTO `usrs` (`userName`, `fullName`, `eMail`, `passWord`, `HashKey`, `Activity`, `Cnctvity`, `Gender`, `Sexuality`, `Biography`, `Interests`, `fameRate`)
+										VALUES (:userName, :fullName, :eMail, :passWord, :HashKey, 0, 0, :Gender, :Sexuality, :Biography, :Interests, 0);");
 			$query->bindParam(':userName', $userName, PDO::PARAM_STR);
 			$query->bindParam(':fullName', $fullName, PDO::PARAM_STR);
 			$query->bindParam(':eMail', $eMail, PDO::PARAM_STR);
@@ -90,6 +92,19 @@
 			$query->bindParam(':HashKey', $HashKey, PDO::PARAM_STR);
 			$query->execute();
 		}
+
+		public function getConnected($Id) {
+			$query = $this->_pdo->prepare("UPDATE `usrs` SET `Cnctvity` = 1 WHERE `usrs`.`Id` = :Id");
+			$query->bindParam(':Id', $Id, PDO::PARAM_STR);
+			$query->execute();
+		}
+
+		public function getUnconnected($Id) {
+			$query = $this->_pdo->prepare("UPDATE `usrs` SET `Cnctvity` = 0 WHERE `usrs`.`Id` = :Id");
+			$query->bindParam(':Id', $Id, PDO::PARAM_STR);
+			$query->execute();
+		}
+
 
 		public function findKeyMatch($HashKey) {
 			$query = $this->_pdo->prepare("SELECT * FROM `usrs` WHERE `HashKey` = :HashKey LIMIT 1");
@@ -135,10 +150,11 @@
 			$query->execute();
 		}
 
-		public function updateNotification($userName, $toNotify) {
-			$query = $this->_pdo->prepare("UPDATE `usrs` SET `toNotify` = :toNotify WHERE `usrs`.`userName` = :userName");
-			$query->bindParam(":toNotify", $toNotify);
-			$query->bindParam(":userName", $userName);
+		public function LastCnctTime($some1) {
+			$timestring = date("l jS \of F Y h:i:s A");
+			$query = $this->_pdo->prepare("UPDATE `usrs` SET `LastCnctTime` = :timestring WHERE Id = :some1;");
+			$query->bindParam(':timestring', $timestring);
+			$query->bindParam(':some1', $some1, PDO::PARAM_STR);
 			$query->execute();
 		}
 
@@ -172,8 +188,8 @@
 			return ($rows);
 		}
 
-		public function imgFromDBFetch() {
-			$query = $this->_pdo->prepare("SELECT `Id`, `fullName`, `Img1`, `Img2`, `Img3`, `Img4`, `Img5` FROM `usrs` ORDER BY `Id` DESC");
+		public function usrsFromDBFetch() {
+			$query = $this->_pdo->prepare("SELECT `Id`, `fullName`, `Cnctvity`, `Gender`, `Sexuality`, `Biography`, `Interests`, `fameRate`, `Img1`, `Img2`, `Img3`, `Img4`, `Img5`, `LastCnctTime` FROM `usrs` WHERE Activity = 1 ORDER BY `Id` DESC");
 			$query->execute();
 			$rows = $query->fetchAll();
 			return ($rows);
@@ -183,5 +199,101 @@
 			$query = $this->_pdo->prepare("DELETE FROM `imgs` WHERE `imgs`.`Id` = :Id");
 			$query->bindParam(":Id", $Id);
 			$query->execute();
+		}
+
+		public function whoLikesWhoTableCreate() {
+			$this->_pdo->exec("CREATE TABLE IF NOT EXISTS `Demo`.`whoLikesWho`(
+			`ActionId` INT NOT NULL AUTO_INCREMENT ,
+			`Liker` INT(255) NULL DEFAULT NULL ,
+			`Liked` INT(255) NULL DEFAULT NULL ,
+			`Block` INT(255) NULL DEFAULT NULL ,
+			PRIMARY KEY (`ActionId`)) ENGINE = InnoDB;");
+		}
+
+		public function fameRate($some1) {
+			$query = $this->_pdo->prepare("SELECT COUNT `Liked` FROM `wholikeswho` WHERE `Liked` = :some1");
+			$query->bindParam(':some1', $some1, PDO::PARAM_STR);
+			$query->execute();
+			$rows = $query->fetchAll();
+			if ($rows)
+				return ($rows);
+			else
+				return (0);
+		}
+
+		public function some1likessome1($Liker, $Liked) {
+			$query = $this->_pdo->prepare("INSERT INTO `wholikeswho` (`Liker`, `Liked`)
+				VALUES (:Liker, :Liked);");
+			$query->bindParam(':Liker', $Liker, PDO::PARAM_STR);
+			$query->bindParam(':Liked', $Liked, PDO::PARAM_STR);
+			$query->execute();
+		}
+
+		public function incrementFameRate($some1) {
+			$query = $this->_pdo->prepare("UPDATE `usrs` SET `fameRate` = `fameRate` + 1 WHERE `usrs`.`Id` = :Id");
+			$query->bindParam(':Id', $some1, PDO::PARAM_STR);
+			$query->execute();
+		}
+
+		public function isntSome1ILike($mySelf, $some1) {
+			$query = $this->_pdo->prepare("SELECT * FROM `wholikeswho` WHERE `Liker` = :mySelf AND `Liked` = :some1 LIMIT 1");
+			$query->bindParam(':mySelf', $mySelf, PDO::PARAM_STR);
+			$query->bindParam(':some1', $some1, PDO::PARAM_STR);
+			$query->execute();
+			$rows = $query->fetchAll();
+			if ($rows)
+				return (0);
+			else
+				return (1);
+		}
+
+		public function some1unlikessome1($unLiker, $unLiked) {
+			$query = $this->_pdo->prepare("DELETE FROM `wholikeswho` WHERE `wholikeswho`.`Liker` = :unLiker AND `wholikeswho`.`Liked` = :unLiked");
+			$query->bindParam(":unLiker", $unLiker);
+			$query->bindParam(":unLiked", $unLiked);
+			$query->execute();
+		}
+
+		public function decrementFameRate($some1) {
+			$query = $this->_pdo->prepare("UPDATE `usrs` SET `fameRate` = `fameRate` - 1 WHERE `usrs`.`Id` = :Id");
+			$query->bindParam(':Id', $some1, PDO::PARAM_STR);
+			$query->execute();
+		}
+
+		public function some1BlockedSome1($mySelf, $some1) {
+			$query = $this->_pdo->prepare("INSERT INTO `wholikeswho` (`Liker`, `Block`)
+				VALUES (:Liker, :Block);");
+			$query->bindParam(':Liker', $mySelf, PDO::PARAM_STR);
+			$query->bindParam(':Block', $some1, PDO::PARAM_STR);
+			$query->execute();
+		}
+
+		public function isntBlocked($mySelf, $some1) {
+			$query = $this->_pdo->prepare("SELECT * FROM `wholikeswho` WHERE `Liker` = :mySelf AND `Block` = :some1 LIMIT 1");
+			$query->bindParam(':mySelf', $mySelf, PDO::PARAM_STR);
+			$query->bindParam(':some1', $some1, PDO::PARAM_STR);
+			$query->execute();
+			$rows = $query->fetchAll();
+			if ($rows)
+				return (0);
+			else
+				return (1);
+		}
+
+		public function weBothLikeEachOther($mySelf, $some1) {
+			$query0 = $this->_pdo->prepare("SELECT * FROM `wholikeswho` WHERE `Liker` = :mySelf AND `Liked` = :some1 LIMIT 1");
+			$query0->bindParam(':mySelf', $mySelf, PDO::PARAM_STR);
+			$query0->bindParam(':some1', $some1, PDO::PARAM_STR);
+			$query0->execute();
+			$rows0 = $query0->fetchAll();
+			$query1 = $this->_pdo->prepare("SELECT * FROM `wholikeswho` WHERE `Liker` = :some1 AND `Liked` = :mySelf LIMIT 1");
+			$query1->bindParam(':some1', $some1, PDO::PARAM_STR);
+			$query1->bindParam(':mySelf', $mySelf, PDO::PARAM_STR);
+			$query1->execute();
+			$rows1 = $query1->fetchAll();
+			if ($rows0 && $rows1)
+				return (1);
+			else
+				return (0);
 		}
 	}

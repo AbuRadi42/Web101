@@ -12,6 +12,7 @@
 				if ($row['Activity']) {
 					session_start();
 					$_SESSION['userName'] = ['userName'=>$row['userName'], 'Id'=>$row['Id']];
+					$obj->getConnected($row['Id']);
 					
 					header('Location: ../index.php?login=success');
 				}

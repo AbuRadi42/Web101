@@ -18,7 +18,8 @@
               <div class="header-right">
                 <a href="./imgUpload.php">Upload an Image</a>
                 <a href="./settings.php">Settings</a>
-                <a href="incs/signOut.inc.php?signOutSubmit='.$_SESSION['userName'].'">Sign Out</a>
+                <a href="incs/signOut.inc.php?signOutUserName='.$_SESSION['userName'].'&signOutId='.
+                $_SESSION['userName']['Id'].'">Sign Out</a>
               </div>
               ';
       }

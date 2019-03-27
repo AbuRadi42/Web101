@@ -14,10 +14,6 @@
         <input type="password" class="textholder" name="newPassWord">
         <label for="password">Repeat Password</label>
         <input type="password" class="textholder" name="newRepeat">
-        <label for="Notification">
-          <input class="checkBox" type="checkbox" name="newToNotify" value="notification" style="float: left; margin-top: 5px">
-          <h5 class="notprmssn">I'd like to recieve notifications via email</h5>
-        </label>
         <br>
         <input type="submit" class="submit" value="Save Change" name="Change">
         <br>
