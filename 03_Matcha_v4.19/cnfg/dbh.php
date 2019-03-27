@@ -87,6 +87,18 @@
 			$query->execute();
 		}
 
+		// Check https://www.geoplugin.com/webservices/php
+
+		public function userLocationUpdating($userName) {
+			$ipAdress = 0;
+			$Location = var_export(unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$ipAdress)));
+			$yourCity = $Location['geoplugin_city'];
+			$query = $this->_pdo->prepare("UPDATE `usrs` SET `Location` = :yourCity WHERE `usrs`.`userName` = :userName");
+			$query->bindParam(':yourCity', $yourCity, PDO::PARAM_STR);
+			$query->bindParam(':userName', $userName, PDO::PARAM_STR);
+			$query->execute();
+		}
+
 		public function activateAccount($HashKey) {
 			$query = $this->_pdo->prepare("UPDATE `usrs` SET `Activity` = 1 WHERE `usrs`.`HashKey` = :HashKey");
 			$query->bindParam(':HashKey', $HashKey, PDO::PARAM_STR);
@@ -189,7 +201,7 @@
 		}
 
 		public function usrsFromDBFetch() {
-			$query = $this->_pdo->prepare("SELECT `Id`, `fullName`, `Cnctvity`, `Gender`, `Sexuality`, `Biography`, `Interests`, `fameRate`, `Img1`, `Img2`, `Img3`, `Img4`, `Img5`, `LastCnctTime` FROM `usrs` WHERE Activity = 1 ORDER BY `Id` DESC");
+			$query = $this->_pdo->prepare("SELECT `Id`, `fullName`, `Cnctvity`, `Gender`, `Sexuality`, `Biography`, `Interests`, `fameRate`, `Img1`, `Img2`, `Img3`, `Img4`, `Img5`, `LastCnctTime`, `Location` FROM `usrs` WHERE Activity = 1 ORDER BY `Id` DESC");
 			$query->execute();
 			$rows = $query->fetchAll();
 			return ($rows);

@@ -32,6 +32,7 @@
 			$HashPwd = hash('whirlpool', $passWord);
 			confirmationEmailSend($userName, $eMail, $HashKey);
 			$object->userDetailsInsertion($userName, $fullName, $eMail, $HashPwd, $HashKey, $Gender, $Sexuality, $Biography, $Interests);
+			$object->userLocationUpdating($userName);
 			echo '<h5 style="text-align: center">Please check your eMail to activate your account.</h5>';
 			sleep(5);
 			header('Location: ../index.php');
