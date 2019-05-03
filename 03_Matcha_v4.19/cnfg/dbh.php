@@ -28,6 +28,7 @@
 					
 					$this->usrsTableCreate();
 					$this->whoLikesWhoTableCreate();
+					$this->chatTableCreate();
 					self::$INSTANCE = $this;
 					error_log("Database init complete");
 				} catch(PDOException $e) { 
@@ -307,5 +308,15 @@
 				return (1);
 			else
 				return (0);
+		}
+
+		public function chatTableCreate() {
+			$this->_pdo->exec("CREATE TABLE IF NOT EXISTS `Demo`.`chat`(
+			`MsgNo` INT NOT NULL AUTO_INCREMENT ,
+			`chattedFrom` INT(255) NULL DEFAULT NULL ,
+			`chattedTo` INT(255) NULL DEFAULT NULL ,
+			`Content` VARCHAR(255) NULL DEFAULT NULL ,
+			`timeStmp` INT NULL DEFAULT NULL ,
+			PRIMARY KEY (`MsgNo`)) ENGINE = InnoDB;");
 		}
 	}

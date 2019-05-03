@@ -10,7 +10,7 @@
     $rows = $obj->usrsFromDBFetch();
 
     for ($i = 0; $i < sizeof($rows); $i++) {
-        if (1) {
+        if (1 && $_SESSION['userName']['Id'] !== $rows[$i]['Id']) {
             echo
             '
               <div class="responsive">
@@ -27,9 +27,9 @@
                     </div>
                   </a>
                 <div class="desc" title="Interests: '.$rows[$i]['Interests'].'1&#013;Biography: '.$rows[$i]['Biography'].'">
-                  <a href="./incs/toBlock.inc.php?BlockedId='.$rows[$i]['Id'].'">⨂</a>
             ';
-
+            // if ($_SESSION['userName'] && isntBlocked($_SESSION['userName']['Id'], $rows[$i]['Id']))
+            //     echo '<a href="./incs/toBlock.inc.php?BlockedId='.$rows[$i]['Id'].'">⨂</a>';
             if ($rows[$i]['Gender'] == 1 && $rows[$i]['Sexuality'] == "hetero")
                 echo ' ♂ ⚤ ';
             else if ($rows[$i]['Gender'] == 1 && $rows[$i]['Sexuality'] == "homo")
