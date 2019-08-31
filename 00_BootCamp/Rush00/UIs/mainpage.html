@@ -1,0 +1,129 @@
+<!-- *********************************************************************** -->
+<!--                                                                         -->
+<!--                                                      :::      ::::::::  -->
+<!-- mainpage.html                                      :+:      :+:    :+:  -->
+<!--                                                  +:+ +:+         +:+    -->
+<!-- By: saburadi <marvin@42.fr>                    +#+  +:+       +#+       -->
+<!--                                              +#+#+#+#+#+   +#+          -->
+<!-- Created: 2018/10/06 00:45:49 by saburadi          #+#    #+#            -->
+<!-- Updated: 2018/10/06 00:45:55 by saburadi         ###   ########.fr      -->
+<!--                                                                         -->
+<!-- *********************************************************************** -->
+
+<!DOCTYPE html>
+<html>
+	<link rel="stylesheet" href="./styleSheet.css">
+	<head>
+		<meta charset="UTF-8">
+		<title>mainpage</title>
+	</head>
+	<body>
+		<div id="upperSection">
+			<div id="CustomerProfile">
+				<div id="leftButtonDiv">
+					<button id="leftButton" onclick="openForm()"> 🛒 </button>
+				</div>
+				<img id="profilpic" src="../IMG/profilpic.png">
+				<div id="rightButtonDiv">
+					<a href="./loginpage.html"><button id="rightButton"> 🚪 </button></a>
+				</div>
+			</div>
+			<div id="columns">
+				<h1 id="Welcome">Welcome to e-Grocery</h1><br>
+				<table>
+					<th id="column">
+						<input id="Fruits" type="checkbox" onCheck="fruitsOnly(this)"> Fruits<br>
+						<input id="Veggies" type="checkbox"> Veggies<br>
+						<input id="Seeds" type="checkbox"> Seeds<br>
+					</th>
+					<th id="column">
+						<input id="Johannesburg" type="checkbox"> Johannesburg<br>
+						<input id="Pretoria" type="checkbox"> Pretoria<br>
+						<input id="Durban" type="checkbox"> Durban<br>
+					</th>
+					<th id="column">
+						<input id="Fresh" type="checkbox"> Fresh<br>
+						<input id="oneDayOld" type="checkbox"> One Day Old<br>
+						<input id="Freezed" type="checkbox"> Freezed<br>
+					</th>
+				</table>
+			</div>
+			<div class="form-popup" id="myForm">
+  				<form action="/action_page.php" class="form-container">
+    				<h1 id="Busket">Basket;</h1>
+    				<h5 id="line">---------------------------------------------</h5>
+    				<div id="slip">
+    					//the list of what we add by clicking on (+)
+    				</div>
+    				<button type="submit" class="btn">checkout</button>
+    				<button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  				</form>
+			</div>
+			<div id="lowerSection">
+			<th id="infoside">
+				<div id="infoside">
+					
+				</div>
+			</th>
+			<th id="otherside">
+				<div id="C0">
+					<tr id="C1">
+						<div id="item">
+							<img id="picture" src="../IMG/Peach.jpg">
+							<button id="plusButton" class="Peach"> + </button>
+							<h5 id="price">R10.50</h5>
+						</div>
+					</tr>
+					<tr id="C">
+						<div id="item">
+							<img id="picture" src="../IMG/Banana.png">
+							<button id="plusButton" class="Banana"> + </button>
+							<h5 id="price">R 9.00</h5>
+						</div>
+					</tr>
+				</div>
+				<div id="C0">
+					<tr id="C1">
+						<div id="item">
+							<img id="picture" src="../IMG/Cucumber.png">
+							<button id="plusButton" class="Cucumber"> + </button>
+							<h5 id="price">R12.50</h5>
+						</div>
+					</tr>
+					<tr id="C">
+						<div id="item">
+							<img id="picture" src="../IMG/Beans.jpeg">
+							<button id="plusButton" class="Beans"> + </button>
+							<h5 id="price">R22.50</h5>
+						</div>
+					</tr>
+				</div>
+				<div id="C0">
+					<tr id="C1">
+						<div id="item">
+							<img id="picture" src="../IMG/Potato.jpg">
+							<button id="plusButton" class="Potato"> + </button>
+							<h5 id="price">R 7.50</h5>
+						</div>
+					</tr>
+					<tr id="C">
+						<div id="item">
+							<img id="picture" src="../IMG/Chickpeas.jpg">
+							<button id="plusButton" class="Chickpeas"> + </button>
+							<h5 id="price">R10.50</h5>
+						</div>
+					</tr>
+				</div>
+			</th>
+		</div>
+		<script>
+			function openForm() {
+				document.getElementById("myForm").style.display = "block";
+			}
+
+			function closeForm() {
+				document.getElementById("myForm").style.display = "none";
+			}
+		</script>
+	</body>
+</html>
