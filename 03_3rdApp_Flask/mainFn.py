@@ -35,6 +35,20 @@ def logout():
     session['logged_in'] = False
     return index()
 
+@WebApp.route('/signup', methods=['POST'])
+
+def signup():
+    POST_USERNAME = str(request.form['username'])
+    POST_REALNAME = str(request.form['realname'])
+    POST_PASSWORD = str(request.form['password'])
+    POST_REPEAT = str(request.form['repeat'])
+    POST_E_MAIL = str(request.form['e_mail'])
+    POST_GENDER = int(request.form['gender'])
+    POST_SEXUALITY = str(request.form['sexuality'])
+    POST_BIOGRAPHY = str(request.form['biography'])
+    POST_INTERESTS = str(request.form['interests'])
+    Session = sessionmaker(bind=engine)
+
 if __name__ == '__main__':
     WebApp.secret_key = os.urandom(12)
     WebApp.run(host='0.0.0.0', port=4000, debug=True)
