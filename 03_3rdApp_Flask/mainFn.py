@@ -2,7 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import os
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
-engine = create_engine('sqlite:///tutorial.db', echo=True)
+engine = create_engine('sqlite:///matcha.db', echo=True)
 
 WebApp = Flask(__name__)
 
@@ -12,11 +12,11 @@ def index():
     if not session.get('logged_in'):
         return render_template('loginForm.html')
     else:
-        return 'Hello Boss!  <a href="/logout">Logout</a>'
+        return render_template('dashBoard.html')
 
 @WebApp.route('/login', methods=['POST'])
 
-def do_admin_login():
+def login():
     POST_USERNAME = str(request.form['username'])
     POST_PASSWORD = str(request.form['password'])
     Session = sessionmaker(bind=engine)
