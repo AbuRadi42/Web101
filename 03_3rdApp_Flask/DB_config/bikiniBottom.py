@@ -4,9 +4,9 @@ idNo = 1
 
 Character = [
 	[
-		"Star69Fish",
+		"Star69Fish", #5_Sided_Star
 		"Patrick Star",
-		"7363000229d9063ded8467772db7aff2d9ef78c7e43ac0249ab0832ffe75329ee29555423628cc77263332e4578a2755a0eef7e9547409772528e50352925665d711f7251124e15849ecca7a4491e31a", #5_sided_star
+		"736300025fb247ee0070786c584aca7d94f43e7f23921471c0cad0b6c56e530a1247e9ddf02525673a9dd320aead571da50c5fdb75c62c0318b06dc17eed85695c6f24d2da25f92c2fa440bec4bcdd02",
 		"?",
 		"Patrick@Star.com",
 		"1",
@@ -22,9 +22,9 @@ Character = [
 		""
 	],
 	[
-		"Clarinetist",
+		"Clarinetist", #12345Clarinet
 		"Squidward Tentacles",
-		"73630002d0ed38dbb368bb5747ff0d7984fe2ea3c16aec2d4af3e2dab988d9872fe98b973df9a0e7b86116a2b3486a447f38eac534739307e37eca0ab8bc4241223aeafd55f9acc76b7f613b9b1657de1b", #12345Clarinet
+		"7363000210c1721d5c20e73a5123a69f4af52c5873f42143aa2023ea74036103d9a887e148bdd78bac2959fa1ad257f04c1c34ef8c7b5246d7880fabfda77df3371cd71573a4524414b9930a86ab6af7f8",
 		"?",
 		"Clarinetist@gmail.com",
 		"1",
@@ -40,9 +40,9 @@ Character = [
 		""
 	],
 	[
-		"BigBoy",
+		"BigBoy", #Money0rgasm
 		"Mr. Krabs",
-		"73630002bb27afeeb7dfe0e4f7084aa3cc2a930b94e725a44f6606275d32d3245833aba6572b302b65f5dcd422bda8714647489805f5fa850128fcc99a3deb148a93ae5936c55f6b7377eff1230a9d", #Money0rgasm
+		"7363000226a3f086f4080cf47b443b13eb673acf363ff6dc31530413c435a99b6db9a8d0523e44a7d61dd6cd4d2600cf19459ceb2cda40c607e1a80f3c5dd51162c0165f6acfa626fb6b64081546dc",
 		"?",
 		"Money@Money.com",
 		"1",
@@ -58,9 +58,9 @@ Character = [
 		""
 	],
 	[
-		"Squirrel",
+		"Squirrel", #Science_42
 		"Sandy Cheeks",
-		"736300023c8a1534972a5bbd187b582c09bf2d3e6ecc04ddd25bd4beb20593b68cb0f78cfba6115b7d867d4df231b1e0dd37f269383f66d67cc433c3cfa545154b0608578bea0e140cf27541a429", #Science_42
+		"73630002d29e0686f26ce74e8975161c0c3a017784d9c2e6724816591c5bbdeaf326f425b9dd8baad7f8a797d980fe1bc724d83f70e825fa285871f752081bd834617f5107112a69e37e69483a17",
 		"?",
 		"squirrel@aquanauts.com",
 		"1",
@@ -76,9 +76,9 @@ Character = [
 		""
 	],
 	[
-		"Junior",
+		"Junior", #JuniorSize1
 		"Sheldon J. Plankton",
-		"73630002fd668e2a556dcebe75cc5b77b9d0d4f0f4a266311bd47ec5d3fd4feb2989898db899adbd9eaa7b4a79efb39f99bc295cf50e89657992d42b287a6890db71df2e542f37ee91cb1b23dab7c9", #JuniorSize1
+		"73630002cd4a30828c23af446ceb208202d868c0458aa4848884c2a57fbe724a5e5ef12c7dff6c5f2e36a69cda5c910e442427f21650d877073f7fa1e95abd94fd4207745fdca339f6ada2d096c49d",
 		"?",
 		"Plankton@1942.com",
 		"1",
@@ -94,9 +94,9 @@ Character = [
 		""
 	],
 	[
-		"Puffy",
+		"Puffy", #PuffyStuff1
 		"Mrs. Puff",
-		"7363000292f9ff57663eb348a046c6553d0b2a16687f4ba9018b975eed47773639628f81c71c2a16644280c67c94a858228da3bbc287f38b80152dbfcc5dae8f7651880f730d4332375bac5f1d2231", #PuffyStuff1
+		"73630002b7884442d9244e5675b9ed0e889740af9c32a89ebe94c74e8a852a62f0dd28e2f8cba19e115723ccac73404652626f938a183c7f35fcb1a4f512aa3d41205a71fcf0dbfc1ee7b2d746ba72",
 		"?",
 		"Mrs@Puff.com",
 		"1",
@@ -112,9 +112,9 @@ Character = [
 		""
 	],
 	[
+		"moneyKrabs", #dontTe11MyDad
 		"Pearl Krabs",
-		"Patrick Star",
-		"7363000284ede6d0f144c8f3031ada435fa2c86b324d2421c676ffcc616777d4603792e554a0ecb58f3fa6167b1ce695131a1dece0a8c96e240be3fa96c018026dd28e58a65093ccf2ae9c4166240dbd12", #dontTe11MyDad
+		"73630002c59982959c234f167a6efc2d86751c8a3bd4f31b6a8f5c9b5ec06ac3e7007d4a7d443ba1be85fcc6649d9493ad81866cbb95e08b880d077b013e4799f779d9c57650349dd15be888667c8bb99f",
 		"?",
 		"Pearl@Money.com",
 		"1",
@@ -130,9 +130,9 @@ Character = [
 		""
 	],
 	[
+		"Screen", #OI01_getit?
 		"Karen Plankton",
-		"Patrick Star",
-		"73630002939983d74475b729d49341e4c88d5efc6ec7cd371c3012e1f67f73e24c312630bc4b3c57d308f2ca7cd00d0a0a705dd9e900949bbfe882ef5ed7a33e139bed9a7b0cc35a9b696c8e232d4e", #OI01_getit?
+		"73630002778a20bbebcc649bb5fb2360516ca521e77f545363eba295ac3c2613dcac2fde249143e1eded04059e78505ff029ac57d61f9f83b8aa1b9029405aacaeb7f43b7050a05d4217d8a8b03aec",
 		"?",
 		"Karen@1984.com",
 		"1",
@@ -148,9 +148,9 @@ Character = [
 		""
 	],
 	[
-		"SquarePants",
+		"SquarePants", #Soaked1and1Square
 		"SpongeBob SquarePants",
-		"7363000250bd18a0d821e406e182c066751d0f9fd28b034d8faae199d0a72f933d4e24294d0a59f57195946ec0d4788aa57532ad31849d296e0ddb3fc5c120593e6bce9ab86d7319675cc55c1a5fa2030fd550884e", #Soaked1and1Square
+		"736300027e532a4742c05e07f840210bfd9b1d5b90acacc6bd50c8d83d79c3e10a7903a80cda06d5085ad01f54c4d35be3a2585b9ca224cc34f815552512c5a791f2481c10defc469c67a0cd7a8fa0cd78da94e6c7",
 		"?",
 		"Square@Pants.com",
 		"1",

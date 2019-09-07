@@ -1,5 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
+
 import redis
+
 from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from validate_email import validate_email
@@ -85,4 +87,6 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality):
 		print "\033[0m] just signed up"
 		return new_IdNo
 
-userSignUp("Sameh96M", "Sameh AbuRadi", "Soaked1and1Square", "example@example.com", 1, 1)
+	# send a varification email
+
+	# print initUserInfo['password']
