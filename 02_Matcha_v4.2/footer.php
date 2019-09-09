@@ -1,3 +1,5 @@
-
-</body>
-</html>
+<?php
+	echo '
+	</body>
+	</html>
+	'
