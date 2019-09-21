@@ -97,6 +97,11 @@ def signup():
 	)
 	return index()
 
+@WebApp.route('/nwusrForm')
+
+def nwusrForm():
+	return render_template('nwusrForm.html')
+
 if __name__ == '__main__':
 	WebApp.secret_key = os.urandom(12)
 	WebApp.run(host='0.0.0.0', port=4000, debug=True)

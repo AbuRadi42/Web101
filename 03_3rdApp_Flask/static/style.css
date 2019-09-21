@@ -1,214 +1,214 @@
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 *:focus {}
 
 body {
-    font-family: Arial;
-    background-color: #3498DB;
-    padding: 50px;
+	font-family: Arial;
+	background-color: #3498DB;
+	padding: 50px;
 }
 
 .app-name {
-    font-family: 'Pacifico', cursive;
-    font-size: 200%;
-    text-align: center;
-    color: #eee;
+	font-family: 'Pacifico', cursive;
+	font-size: 200%;
+	text-align: center;
+	color: #eee;
 }
 
 hr {
-    display: block;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: auto;
-    margin-right: auto;
-    border-style: inset;
-    border-width: 1px;
+	display: block;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: auto;
+	margin-right: auto;
+	border-style: inset;
+	border-width: 1px;
 }
 
 .login {
-    margin: 20px auto;
-    width: 300px;
+	margin: 20px auto;
+	width: 300px;
 }
 
 .login-screen {
-    background-color: #FFF;
-    padding: 20px;
-    border-radius: 5px
+	background-color: #FFF;
+	padding: 20px;
+	border-radius: 5px
 }
 
 .app-title {
-    text-align: center;
-    color: #777;
+	text-align: center;
+	color: #777;
 }
 
 .login-form {
-    text-align: center;
+	text-align: center;
 }
 
 .control-group {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 input {
-    text-align: center;
-    background-color: #ECF0F1;
-    border: 2px solid transparent;
-    border-radius: 3px;
-    font-size: 16px;
-    font-weight: 200;
-    padding: 10px 0;
-    width: 250px;
-    transition: border .5s;
+	text-align: center;
+	background-color: #ECF0F1;
+	border: 2px solid transparent;
+	border-radius: 3px;
+	font-size: 16px;
+	font-weight: 200;
+	padding: 10px 0;
+	width: 250px;
+	transition: border .5s;
 }
 
 input:focus {
-    border: 2px solid #3498DB;
-    box-shadow: none;
+	border: 2px solid #3498DB;
+	box-shadow: none;
 }
 
 .btn {
-    border: 2px solid transparent;
-    background: #3498DB;
-    color: #ffffff;
-    font-size: 16px;
-    line-height: 25px;
-    padding: 10px 0;
-    text-decoration: none;
-    text-shadow: none;
-    border-radius: 3px;
-    box-shadow: none;
-    transition: 0.25s;
-    display: block;
-    width: 250px;
-    margin: 0 auto;
+	border: 2px solid transparent;
+	background: #3498DB;
+	color: #ffffff;
+	font-size: 16px;
+	line-height: 25px;
+	padding: 10px 0;
+	text-decoration: none;
+	text-shadow: none;
+	border-radius: 3px;
+	box-shadow: none;
+	transition: 0.25s;
+	display: block;
+	width: 250px;
+	margin: 0 auto;
 }
 
 .btn:hover {
-    background-color: #2980B9;
+	background-color: #2980B9;
 }
 
 .login-link {
-    font-size: 12px;
-    color: #444;
-    display: block;
-    margin-top: 12px;
+	font-size: 12px;
+	color: #444;
+	display: block;
+	margin-top: 12px;
 }
 
 ul {
-    border-radius: 7.5px;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
+	border-radius: 7.5px;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333;
 }
 
 li {
-    float: left;
+	float: left;
 }
 
 li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
 }
 
 /* Change the link color to #111 (black) on hover */
 li a:hover {
-    background-color: #111;
+	background-color: #111;
 }
 
 .active {
-    background-color: #555;
+	background-color: #555;
 }
 
 .onoffswitch {
-    padding-left: 7.5px;
-    position: relative;
-    width: 90px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+	padding-left: 7.5px;
+	position: relative;
+	width: 90px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 .onoffswitch-checkbox {
-    display: none;
+	display: none;
 }
 
 .onoffswitch-label {
-    display: block;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid #999999;
-    border-radius: 20px;
+	display: block;
+	overflow: hidden;
+	cursor: pointer;
+	border: 2px solid #999999;
+	border-radius: 20px;
 }
 
 .onoffswitch-inner {
-    display: block;
-    width: 200%;
-    margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
+	display: block;
+	width: 200%;
+	margin-left: -100%;
+	transition: margin 0.3s ease-in 0s;
 }
 
 .onoffswitch-inner:before,
 .onoffswitch-inner:after {
-    display: block;
-    float: left;
-    width: 50%;
-    height: 30px;
-    padding: 0;
-    line-height: 30px;
-    font-size: 14px;
-    color: white;
-    font-family: Trebuchet, Arial, sans-serif;
-    font-weight: bold;
-    box-sizing: border-box;
+	display: block;
+	float: left;
+	width: 50%;
+	height: 30px;
+	padding: 0;
+	line-height: 30px;
+	font-size: 14px;
+	color: white;
+	font-family: Trebuchet, Arial, sans-serif;
+	font-weight: bold;
+	box-sizing: border-box;
 }
 
 .onoffswitch-inner:before {
-    content: "♀";
-    padding-left: 0px;
-    background-color: #3498DB;
-    color: #FFFFFF;
+	content: "♀";
+	padding-left: 0px;
+	background-color: #3498DB;
+	color: #FFFFFF;
 }
 
 .onoffswitch-inner:after {
-    content: "♂";
-    padding-right: 32.5px;
-    background-color: #EEEEEE;
-    color: #999999;
-    text-align: right;
+	content: "♂";
+	padding-right: 32.5px;
+	background-color: #EEEEEE;
+	color: #999999;
+	text-align: right;
 }
 
 .onoffswitch-switch {
-    display: block;
-    width: 21px;
-    margin: 6px;
-    background: #FFFFFF;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 48.5px;
-    border: 1px solid #999999;
-    border-radius: 50%;
-    transition: all 0.3s ease-in 0s;
+	display: block;
+	width: 21px;
+	margin: 6px;
+	background: #FFFFFF;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 48.5px;
+	border: 1px solid #999999;
+	border-radius: 50%;
+	transition: all 0.3s ease-in 0s;
 }
 
 .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
+	margin-left: 0;
 }
 
 .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
-    right: 0px;
+	right: 0px;
 }
 
 .sexuality {
-    height: 33.75px;
-    width: 150px;
-    border-radius: 7.5px;
-    text-align: center
+	height: 33.75px;
+	width: 150px;
+	border-radius: 7.5px;
+	text-align: center
 }
