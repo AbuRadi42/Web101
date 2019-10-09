@@ -9,6 +9,7 @@ sys.path.insert(0, './incs')
 from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from signUp import userSignUp
+from displayUsers import showUsers
 
 r = redis.Redis()
 
@@ -21,7 +22,7 @@ def index():
 		# return render_template('nwusrForm.html')
 		return render_template('loginForm.html')
 	else:
-		return render_template('dashBoard.html')
+		return render_template('dashBoard.html', cards = showUsers())
 
 @WebApp.route('/login', methods=['POST'])
 
@@ -33,6 +34,12 @@ def login():
 		userName = r.hget(hashName, "userName")
 		if userName == POST_USERNAME:
 			break
+	if userName <> POST_USERNAME:
+		print "userName \'\033[1m",
+		print POST_USERNAME,
+		print "\033[0m\' isn't registered"
+		flash('userName isn\'t registered')
+		return index()
 	passWord = r.hget(hashName, "password")
 	decrypted = decrypt(POST_USERNAME[::-1], unhexlify(passWord))
 	if decrypted == POST_PASSWORD:
@@ -88,12 +95,14 @@ def signup():
 	# ---
 	POST_SEXUALITY = str(request.form['sexuality'])
 
+	Biography = '' 
 	userSignUp(POST_USERNAME,
 		POST_REALNAME,
 		POST_PASSWORD,
 		POST_E_MAIL,
 		POST_GENDER,
-		POST_SEXUALITY
+		POST_SEXUALITY,
+		Biography
 	)
 	return index()
 

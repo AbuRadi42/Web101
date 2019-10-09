@@ -35,7 +35,7 @@ Character = [
 		1,
 		1,
 		0,
-		"I'm a fictional character[idNo - 1]",
+		"I'm a fictional character",
 		"Clarinet, Monuments",
 		""
 	],

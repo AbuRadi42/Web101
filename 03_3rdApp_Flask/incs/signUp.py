@@ -1,14 +1,14 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 
-import redis
-
 from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from validate_email import validate_email
 
+import redis
+
 r = redis.Redis()
 
-def userSignUp(userName0, realName, password, e_mail, gender, Sexuality):
+def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biography):
 	# userName check
 	for hashName in r.keys("0*"):
 		userName1 = r.hget(hashName, "userName")
@@ -80,6 +80,7 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality):
 
 	initUserInfo['Sexuality'] = Sexuality
 	initUserInfo['Following'] = ""
+	initUserInfo['Biography'] = ""
 
 	if r.hmset(new_IdNo, initUserInfo):
 		print "User No. [\033[1m",
