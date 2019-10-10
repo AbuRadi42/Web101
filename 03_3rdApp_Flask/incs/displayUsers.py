@@ -16,13 +16,13 @@ def grabUsers():
 def showUsers():
 	users = grabUsers()
 
-	Cards = '<div class="row">'
+	Cards = '<div class="dashRow">'
 	C = 0
 	while C < len(users):
 		uInfo = r.hgetall(users[C])
 		# ---
 		if C % 4 is 0:
-			Cards += '</div><div class="row">'
+			Cards += '</div><div class="dashRow">'
 		# ---
 		Cards += ''.join((
 			'<div class="column">',
@@ -38,6 +38,14 @@ def showUsers():
 		# ---
 		C += 1
 
-	R = (len(users) % 4) if (len(users) % 4) > 0 else 0
+	R = (4 - (len(users) % 4)) if (len(users) % 4) > 0 else 0
+
+	while R > 0:
+		Cards += ''.join((
+			'<div class="column">',
+				'<!-- Nothing.. -->',
+			'</div>'
+		))
+		R -= 1
 
 	return Cards

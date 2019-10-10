@@ -9,6 +9,7 @@ sys.path.insert(0, './incs')
 from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from signUp import userSignUp
+from Retrieve import sendEmail
 from displayUsers import showUsers
 
 r = redis.Redis()
@@ -19,7 +20,6 @@ WebApp = Flask(__name__)
 
 def index():
 	if not session.get('loggedIn'):
-		# return render_template('nwusrForm.html')
 		return render_template('loginForm.html')
 	else:
 		return render_template('dashBoard.html', cards = showUsers())
@@ -29,15 +29,14 @@ def index():
 def login():
 	POST_USERNAME = str(request.form['username'])
 	POST_PASSWORD = str(request.form['password'])
-	
+
 	for hashName in r.keys("0*"):
 		userName = r.hget(hashName, "userName")
 		if userName == POST_USERNAME:
 			break
 	if userName <> POST_USERNAME:
-		print "userName \'\033[1m",
-		print POST_USERNAME,
-		print "\033[0m\' isn't registered"
+		print "\nuserName \'\033[1m%s\033[0m\'" % POST_USERNAME,
+		print "isn't registered\n"
 		flash('userName isn\'t registered')
 		return index()
 	passWord = r.hget(hashName, "password")
@@ -64,12 +63,90 @@ def login():
 @WebApp.route('/logout')
 
 def logout():
+	if session['userIdNo'] is not None:
+		print "User No. [\033[1m",
+		print session['userIdNo'],
+		print "\033[0m] just logged out"
+		session['userIdNo'] = None
+		session['loggedIn'] = False
+		return index()
+	else:
+		return index()
+
+#--- Password Retrieving Mechanism ;
+
+@WebApp.route('/passRetrieveForm')
+
+def passRetrieveFrom():
+	return render_template('Retrieve.html')
+
+@WebApp.route('/passRetrieve', methods=['POST'])
+
+def passRetrieve():
+	POST_USERNAME = str(request.form['username'])
+	if POST_USERNAME == "":
+		print "\nfailed to get the userName; type it in the form\n"
+	else:
+		for hashName in r.keys("0*"):
+			userName = r.hget(hashName, "userName")
+			if userName == POST_USERNAME:
+				break
+		if userName <> POST_USERNAME:
+			print "\nuserName \'\033[1m%s\033[0m\'" % POST_USERNAME,
+			print "isn't registered\n"
+			flash('userName isn\'t registered')
+			return index()
+		else:
+			e_mail = r.hget(hashName, 'e_mail')
+			sendEmail(hashName, e_mail)
+			print "\nan email was sent to %s\n" % e_mail
+	return index()
+
+@WebApp.route('/passResetFrom')
+
+def passResetFrom():
+	return render_template('passResetFrom.html')
+
+@WebApp.route('/passReset', methods=['POST'])
+
+def passReset():
+	return index()
+
+#--- User Info Changing Mechanism ;
+
+@WebApp.route('/profile')
+
+def userProfile():
+	userInfo = r.hgetall(session['userIdNo'])
+	return render_template(
+		'userProfile.html',
+		userName=userInfo['userName'],
+		realName=userInfo['realName'],
+		e_mail=userInfo['e_mail']
+	)
+
+@WebApp.route('/deleteUserRoute')
+
+def deleteUserRoute():
+	return render_template('deleteUser.html')
+
+@WebApp.route('/deleteUser')
+
+def deleteUser():
+	r.delete(session['userIdNo'])
 	print "User No. [\033[1m",
 	print session['userIdNo'],
-	print "\033[0m] just logged out"
+	print "\033[0m] just deleted their account"
 	session['userIdNo'] = None
 	session['loggedIn'] = False
 	return index()
+
+#--- New User Registration Mechanism ;
+
+@WebApp.route('/nwusrForm')
+
+def nwusrForm():
+	return render_template('nwusrForm.html')
 
 @WebApp.route('/signup', methods=['POST'])
 
@@ -106,10 +183,7 @@ def signup():
 	)
 	return index()
 
-@WebApp.route('/nwusrForm')
-
-def nwusrForm():
-	return render_template('nwusrForm.html')
+#--- MainFn
 
 if __name__ == '__main__':
 	WebApp.secret_key = os.urandom(12)

@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<ul>
+	<li><a href="/">Home</a></li>
+	<li><a href="/profile">Profile</a></li>
+	<li><a href="/#">Notifs</a></li>
+	<li><a href="/#">Chat</a></li>
+	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
+</ul>
+
+<div class="userInfo">
+	<div class="row">
+		<div class="column">
+			<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">
+		</div>
+		<div class="column">
+			<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">
+		</div>
+		<div class="column">
+			<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">
+		</div>
+		<div class="column">
+			<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">
+		</div>
+		<div class="column">
+			<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">
+		</div>
+	</div>
+	<form action="/login" method="POST" style="margin-bottom: 5px;">
+		<div class="userInfoCont">
+			<div class="userInfoText">
+				<h2> Your Profile Information; </h2>
+			</div>
+			<div class="row">
+				<div class="column" style="margin: -5px; max-width: fit-content;">
+					<div class="userinfo-group">
+						<input type="text" class="userinfo-field" value="" placeholder="username" name="username">
+						<label class="login-field-icon fui-user" for="login-name">
+						</label>
+					</div>
+				</div>
+				<div class="column" style="margin: -5px; max-width: fit-content;">
+					<div class="onoffswitch" style="margin-top: 5px;">
+						<input type="checkbox" class="onoffswitch-checkbox" id="onOffSwitch" name="gender" checked>
+						<label class="onoffswitch-label" for="onOffSwitch">
+							<span class="onoffswitch-inner onoffswitch-inner-uIm"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<a href="" style="color: gray; font-size: 9.75px; padding-left: 5px;">
+				current userName: {{userName}}
+			</a>
+			<hr>
+			<div class="userinfo-group">
+				<input type="text" class="userinfo-field" value="" placeholder="realname" name="realname">
+				<label class="login-field-icon fui-user" for="login-name">
+				</label>
+			</div>
+			<a href="" style="color: gray; font-size: 9.75px; padding-left: 5px;">
+				current realName: {{realName}}
+			</a>
+			<hr>
+			<div class="userinfo-group">
+				<input type="text" class="userinfo-field" value="" placeholder="e-mail" name="e_mail">
+				<label class="login-field-icon fui-user" for="login-name">
+				</label>
+			</div>
+			<a href="" style="color: gray; font-size: 9.75px; padding-left: 5px;">
+				current e mail: {{e_mail}}
+			</a>
+			<hr>
+			<div class="row">
+				<div class="column" style="margin: -5px; max-width: fit-content;">
+					<div class="userinfo-group">
+						<input type="password" class="userinfo-field" value="" placeholder="password" name="password">
+						<label class="login-field-icon fui-lock" for="login-pass">
+						</label>
+					</div>
+				</div>
+				<div class="column" style="margin: -5px; max-width: fit-content;">
+					<div class="userinfo-group">
+						<input type="password" class="userinfo-field" value="" placeholder="confirmation" name="confirm">
+						<label class="login-field-icon fui-lock" for="login-pass">
+						</label>
+					</div>
+				</div>
+			</div>
+			<a href="" style="color: gray; font-size: 9.75px; padding-left: 5px;">
+				• it has to have [ a -> z, A -> Z & 0 -> 9 ]
+			</a>
+			<hr>
+			<div class="row">
+				<div class="column" style="margin: -5px; max-width: fit-content;">
+					<div class="userinfo-group">
+						<input type="text" class="userinfo-field biographyInterests" value="" placeholder="biography" name="biography">
+						<label class="login-field-icon fui-lock" for="login-pass">
+						</label>
+					</div>
+				</div>
+				<div class="column" style="margin: -5px; max-width: fit-content;">
+					<div class="userinfo-group">
+						<input type="text" class="userinfo-field biographyInterests" value="" placeholder="interests" name="interests">
+						<label class="login-field-icon fui-lock" for="login-pass">
+						</label>
+					</div>
+				</div>
+			</div>
+			<div style="margin-left: 5px; padding-right: 4.5px;" class="control-group">
+				<select class="sexuality" name="sexuality" style="width: 250px;">
+					<option value="1">heteroSexual</option>
+					<option value="-1">homoSexual</option>
+					<option value="0">biSexual</option>
+				</select>
+			</div>
+			<input type="submit" value="Submit Changes" class="btn btn-primary btn-large btn-block userInfoBtn">
+			<a href="/deleteUserRoute" class="deleteUser">
+				Delete my Account
+			</a>
+		</div>
+	</form>
+</div>

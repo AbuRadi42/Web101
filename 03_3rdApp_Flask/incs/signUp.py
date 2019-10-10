@@ -80,7 +80,7 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biograp
 
 	initUserInfo['Sexuality'] = Sexuality
 	initUserInfo['Following'] = ""
-	initUserInfo['Biography'] = ""
+	initUserInfo['Biography'] = "_"
 
 	if r.hmset(new_IdNo, initUserInfo):
 		print "User No. [\033[1m",

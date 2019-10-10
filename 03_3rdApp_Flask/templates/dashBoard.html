@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 <ul>
 	<li><a href="/">Home</a></li>
-	<li><a href="#">Profile</a></li>
-	<li><a href="#">Notifs</a></li>
-	<li><a href="#">Chat</a></li>
+	<li><a href="/profile">Profile</a></li>
+	<li><a href="/#">Notifs</a></li>
+	<li><a href="/#">Chat</a></li>
 	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
 </ul>
 
@@ -24,9 +24,11 @@
 	}
 </style>
 
-{{
-	cards | safe
-}}
+<div style="margin-top: -17.5px;">
+	{{
+		cards | safe
+	}}
+</div>
 
 <script>
 	var slideIndex = 1;
