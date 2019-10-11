@@ -1,6 +1,6 @@
 import redis
 
-from flask import render_template, session
+from flask import session
 
 r = redis.Redis()
 

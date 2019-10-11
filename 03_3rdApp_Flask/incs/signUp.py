@@ -20,6 +20,9 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biograp
 		# flash('you need to enter a userName')
 		print "failed to sign up; a userName is required"
 		return 0
+	if len(userName0) < (5 + 1):
+		print "failed to sign up; userName is shorter than six characters"
+		return 0
 	# realName check
 	testName = realName.split()
 	if len(testName) < 2:
@@ -39,14 +42,14 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biograp
 		elif i.isdigit():
 			numberFlag = True
 	if upperCFlag is False:
-			# flash('your password needs to have at least on capital latter')
-		print "failed to sign up; password missing capital latter"
+		# flash('your password needs to have at least on capital latter')
+		print "failed to sign up; password missing capital latter(s)"
 	if lowerCFlag is False:
 		# flash('your password needs to have at least on small latter')
-		print "failed to sign up; password missing small latter"
+		print "failed to sign up; password missing small latter(s)"
 	if numberFlag is False:
 		# flash('your password needs to have at least on number')
-		print "failed to sign up; password missing number"
+		print "failed to sign up; password missing number(s)"
 	if upperCFlag is False or lowerCFlag is False or numberFlag is False:
 		return 0
 	if len(password) < 10:

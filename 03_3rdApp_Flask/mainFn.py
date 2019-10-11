@@ -11,6 +11,7 @@ from binascii import hexlify, unhexlify
 from signUp import userSignUp
 from Retrieve import sendEmail
 from displayUsers import showUsers
+from handleChange import handleUserInfoChange
 
 r = redis.Redis()
 
@@ -125,6 +126,43 @@ def userProfile():
 		e_mail=userInfo['e_mail']
 	)
 
+@WebApp.route('/infoChange', methods=['POST'])
+
+def infoChange():
+	POST_USERNAME = str(request.form['username'])
+	# ---
+	if request.method == 'POST':
+		gender = request.form.getlist('gender')
+		if len(gender) is 1:
+			POST_GENDER = '0'
+		else:
+			POST_GENDER = '1'
+	# ---
+	POST_REALNAME = str(request.form['realname'])
+	# ---
+	POST_E_MAIL = str(request.form['e_mail'])
+	# ---
+	POST_PASSWORD = str(request.form['password'])
+	POST_CONFIRM = str(request.form['confirm'])
+	# ---
+	Biography = str(request.form['biography'])
+	Interests = str(request.form['interests'])
+	# ---
+	POST_SEXUALITY = str(request.form['sexuality'])
+	# ---
+	handleUserInfoChange(
+		POST_USERNAME,
+		POST_GENDER,
+		POST_REALNAME,
+		POST_E_MAIL,
+		POST_PASSWORD,
+		POST_CONFIRM,
+		Biography,
+		Interests,
+		POST_SEXUALITY
+	)
+	return index()
+
 @WebApp.route('/deleteUserRoute')
 
 def deleteUserRoute():
@@ -166,9 +204,9 @@ def signup():
 	if request.method == 'POST':
 		gender = request.form.getlist('gender')
 		if len(gender) is 1:
-			POST_GENDER = 0
+			POST_GENDER = '0'
 		else:
-			POST_GENDER = 1
+			POST_GENDER = '1'
 	# ---
 	POST_SEXUALITY = str(request.form['sexuality'])
 
