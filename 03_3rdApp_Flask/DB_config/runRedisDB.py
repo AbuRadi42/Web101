@@ -36,5 +36,6 @@ initUserInfo = {
 	"Sexuality":	"_Hetero_Homo_Bi",
 	"Biography":	"Blah!Blah!Blah!",
 	"Interests":	"Blah!Blah!Blah!",
-	"Following":	"1 2 3 4 5 6 7 8",
+	"likes":		" 0001 0005 0009",
+	"hates":		" 0002 0004 0008",
 }

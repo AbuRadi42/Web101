@@ -265,11 +265,13 @@ li a:hover {
 	border-radius: 5px;
 	max-height: 180px;
 	min-height: 180px;
+	z-index: 1;
 }
 
 /* Add some padding inside the card container */
 .container {
-	padding: 2px 16px;
+	padding: 2.5px 10px;
+	margin-top: -10.5px;
 }
 
 p {
@@ -326,7 +328,32 @@ hr {
 .deleteUser {
 	color: gray;
 	font-size: 9.75px;
-	float:right;
+	float: right;
 	padding-right: 5px;
 	margin-top: -10.5px;
+}
+
+.likeBtn {
+	text-decoration: none !important;
+	font-size: 21px;
+	font-family: sans-serif;
+	width: 24.75px;
+
+	z-index: -1;
+	float: right;
+	margin-right: -10.5px;
+	margin-top: 2.25px;
+}
+
+.blockBtn {
+	text-decoration: none !important;
+	font-size: 22.5px;
+	font-family: sans-serif;
+	color: darkred;
+	width: 24.75px;
+
+	z-index: 1;
+	float: right;
+	margin-right: -0.25px;
+	padding-top: 15px;
 }

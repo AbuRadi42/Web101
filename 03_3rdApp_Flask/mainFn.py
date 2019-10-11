@@ -10,7 +10,7 @@ from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from signUp import userSignUp
 from Retrieve import sendEmail
-from displayUsers import showUsers
+from displayUsers import showUsers, unlike
 from handleChange import handleUserInfoChange
 
 r = redis.Redis()
@@ -177,6 +177,27 @@ def deleteUser():
 	print "\033[0m] just deleted their account"
 	session['userIdNo'] = None
 	session['loggedIn'] = False
+	return index()
+
+@WebApp.route('/<x>LikesNo<y>')
+
+def xLikesNoY(x, y):
+	likes = r.hget(x, 'likes')
+	if likes is None:
+		likes = ''
+	likesArray = likes.split()
+	for i in likesArray:
+		if i == y:
+			unlike(x, y, likesArray)
+			return index()
+	# else ;
+	likes += ' %s' % y
+	r.hset(session['userIdNo'], 'likes', likes)
+	return index()
+
+@WebApp.route('/<x>HatesNo<y>')
+
+def xHatesNoY(x, y): # <- the fake thing is just going to be a part of 'why-blocked-them' string
 	return index()
 
 #--- New User Registration Mechanism ;

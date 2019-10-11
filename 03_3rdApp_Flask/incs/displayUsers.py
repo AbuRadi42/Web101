@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import redis
 
 from flask import session
@@ -12,6 +14,17 @@ def grabUsers():
 	users.remove(session['userIdNo'])
 
 	return users
+
+def TheyLikeThem(x, y):
+	likes = r.hget(x, 'likes')
+	if likes is None:
+		likes = ''
+	likesArray = likes.split()
+	for i in likesArray:
+		if i == y:
+			return True
+	# else ;
+	return False
 
 def showUsers():
 	users = grabUsers()
@@ -28,6 +41,20 @@ def showUsers():
 			'<div class="column">',
 				'<div class="card">',
 					'<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">',
+					'<div class="blockBtn">',
+						'<a href="/%sHatesNo%s" class="blockBtn">' % (session['userIdNo'], users[C]),
+							u'✘',
+						'</a>',
+					'</div>',
+					'<div class="likeBtn">',
+						'<a href="/%sLikesNo%s" class="likeBtn" style="color: %s">' % (
+							session['userIdNo'],
+							users[C],
+							'indianred' if TheyLikeThem(session['userIdNo'], users[C]) else 'lightgray'
+						),
+							u'♥',
+						'</a>',
+					'</div>',
 					'<div class="container">',
 						'<h4><b>%s</b></h4>' % uInfo['realName'],
 						'<p>%s</p>' % uInfo['Biography'] if uInfo['Biography'] is not None else None,
@@ -49,3 +76,14 @@ def showUsers():
 		R -= 1
 
 	return Cards
+
+#---
+
+def unlike(x, y, likesArray):
+	likesArray.remove(y)
+
+	likes = ''
+	for i in likesArray:
+		likes += ' %s' % i
+
+	r.hset(session['userIdNo'], 'likes', likes)
