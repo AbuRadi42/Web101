@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import os
 import redis
 import sys
+import commands
 
 sys.path.insert(0, './incs')
 
@@ -12,6 +13,7 @@ from signUp import userSignUp
 from Retrieve import sendEmail
 from displayUsers import showUsers, unlike
 from handleChange import handleUserInfoChange
+from time import time, ctime
 
 r = redis.Redis()
 
@@ -46,6 +48,12 @@ def login():
 		if int(r.hget(hashName, "active")) is 1:
 			session['loggedIn'] = True
 			session['userIdNo'] = hashName
+			r.hset(session['userIdNo'], 'Connection', ':  ' * 9 + 'Online' + '  :' * 9)
+			#---
+			cmd = "curl ipinfo.io/city"
+			status, output = commands.getstatusoutput(cmd)
+			r.hset(session['userIdNo'], 'Location', output.splitlines()[-1])
+			#---
 			print "User No. [\033[1m",
 			print session['userIdNo'],
 			print "\033[0m] just logged in"
@@ -68,6 +76,8 @@ def logout():
 		print "User No. [\033[1m",
 		print session['userIdNo'],
 		print "\033[0m] just logged out"
+		localtime = 'gone since ' + ctime(time())
+		r.hset(session['userIdNo'], 'Connection', localtime)
 		session['userIdNo'] = None
 		session['loggedIn'] = False
 		return index()

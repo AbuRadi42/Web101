@@ -15,6 +15,29 @@ def grabUsers():
 
 	return users
 
+def getSexuality(gender, Sexuality):
+	if Sexuality == '1':
+		return u'⚤'
+	elif Sexuality == '0':
+		return u'⚥'
+	elif Sexuality == '-1':
+		if gender == '1':
+			return u'⚣'
+		else:
+			return u'⚢'
+
+def moreUserInfo(userId):
+	uInfo = r.hgetall(userId)
+
+	rstr = uInfo['Connection'] + ('&#13;' * 2)
+	rstr += 'Location: ' + uInfo['Location'] + '&#13;'
+
+	rstr += 'Gender: ' + (u'♂' if uInfo['gender'] == '1' else u'♀') + ', '
+	rstr += 'Sexuality: ' + getSexuality(uInfo['gender'], uInfo['Sexuality']) + '&#13;'
+	rstr += 'Interests: ' + uInfo['Interests'] + '&#13;'
+	rstr += 'Biography: ' + uInfo['Biography'] + '&#13;'
+	return rstr
+
 #---
 def xPicsIn1Card(userId):
 	userPics = r.hmget(userId, 'pic1', 'pic2', 'pic3', 'pic4', 'pic5')
@@ -83,8 +106,8 @@ def showUsers():
 		# ---
 		Cards += ''.join((
 			'<div class="column">',
-				'<div class="card">',
-					xPicsIn1Card(users[C]), # <- where all the pictures come from ...
+				'<div class="card" title="%s">' % moreUserInfo(users[C]),
+					xPicsIn1Card(users[C]),
 					'<div class="blockBtn">',
 						'<a href="/%sHatesNo%s" class="blockBtn">' % (
 							session['userIdNo'],
