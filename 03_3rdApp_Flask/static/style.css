@@ -103,7 +103,6 @@ ul {
 	padding: 0;
 	overflow: hidden;
 	background-color: #333;
-	min-width: 1130px;
 }
 
 li {
@@ -356,4 +355,12 @@ hr {
 	float: right;
 	margin-right: -0.25px;
 	padding-top: 15px;
+}
+
+.fameR {
+	color: gray;
+	font-size: 18px;
+	float: right;
+	margin-right: -25px;
+	margin-top: 33.25%;
 }

@@ -19,7 +19,7 @@ Character = [
 		-1,
 		"I live under a rock",
 		"Food",
-		""
+		0
 	],
 	[
 		"Clarinetist", #12345Clarinet
@@ -37,7 +37,7 @@ Character = [
 		0,
 		"I'm a fictional character",
 		"Clarinet, Monuments",
-		""
+		0
 	],
 	[
 		"BigBoy", #Money0rgasm
@@ -55,7 +55,7 @@ Character = [
 		0,
 		"Money is what makes it worth it",
 		"KrabbyPattys, Food",
-		""
+		0
 	],
 	[
 		"Squirrel", #Science_42
@@ -73,7 +73,7 @@ Character = [
 		0,
 		"I'm an alien",
 		"Ocean",
-		""
+		0
 	],
 	[
 		"Junior", #JuniorSize1
@@ -91,7 +91,7 @@ Character = [
 		-1,
 		"Shhh, looking for KrabbyPattys the krabby patties recipe",
 		"KrabbyPattys",
-		""
+		0
 	],
 	[
 		"Puffy", #PuffyStuff1
@@ -109,7 +109,7 @@ Character = [
 		1,
 		"I'm mrs. puffy, I like it roughy",
 		"Food",
-		""
+		0
 	],
 	[
 		"moneyKrabs", #dontTe11MyDad
@@ -127,7 +127,7 @@ Character = [
 		1,
 		"I only talk to my father because of his wealth",
 		"Food",
-		""
+		0
 	],
 	[
 		"Screen", #OI01_getit?
@@ -145,7 +145,7 @@ Character = [
 		1,
 		"I am the only true binary here, talk to me before Junior gets home",
 		"Food",
-		""
+		0
 	],
 	[
 		"SquarePants", #Soaked1and1Square
@@ -163,7 +163,7 @@ Character = [
 		1,
 		"I live live in a pineapple under the sea",
 		"Food, Snails, squirrels",
-		""
+		0
 	]
 ]
 
@@ -195,18 +195,19 @@ while idNo < 10:
 	dumbUserInfo['hash_key'] = Character[idNo - 1][3]
 
 	dumbUserInfo['e_mail'] = Character[idNo - 1][4]
-	dumbUserInfo['pics#1'] = Character[idNo - 1][5]
-	dumbUserInfo['pics#2'] = Character[idNo - 1][6]
-	dumbUserInfo['pics#3'] = Character[idNo - 1][7]
-	dumbUserInfo['pics#4'] = Character[idNo - 1][8]
-	dumbUserInfo['pics#5'] = Character[idNo - 1][9]
+	dumbUserInfo['pic1'] = Character[idNo - 1][5]
+	dumbUserInfo['pic2'] = Character[idNo - 1][6]
+	dumbUserInfo['pic3'] = Character[idNo - 1][7]
+	dumbUserInfo['pic4'] = Character[idNo - 1][8]
+	dumbUserInfo['pic5'] = Character[idNo - 1][9]
 	dumbUserInfo['active'] = Character[idNo - 1][10]
 	dumbUserInfo['gender'] = Character[idNo - 1][11]
 
 	dumbUserInfo['Sexuality'] = Character[idNo - 1][12]
 	dumbUserInfo['Biography'] = Character[idNo - 1][13]
 	dumbUserInfo['Interests'] = Character[idNo - 1][14]
-	dumbUserInfo['Following'] = Character[idNo - 1][15]
+
+	dumbUserInfo['fameR'] = Character[idNo - 1][15]
 
 	r.hmset(str(idNo).zfill(4), dumbUserInfo)
 

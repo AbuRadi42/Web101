@@ -15,6 +15,47 @@ def grabUsers():
 
 	return users
 
+#---
+def xPicsIn1Card(userId):
+	userPics = r.hmget(userId, 'pic1', 'pic2', 'pic3', 'pic4', 'pic5')
+
+	# grabing the userPics to turn them into htmlImgs & counting the NoBs
+	htmlImgs = ''
+	NoBs = 0
+	for i in userPics:
+		if i is not None:
+			htmlImgs += ''.join((
+				'<img class="img_avatar mySlides" src="" style="image: url(\'{}\');" '.format(
+					'data:image/jpeg;base64,' + i # <- find a way to encrypt pictures
+				)
+				+ 'style="padding: 2.5px; width: 100%">'
+			))
+			NoBs += 1
+
+	htmlBdgs = ''
+	CoCD = 1
+	while CoCD <= NoBs:
+		htmlBdgs += ''.join((
+			'<span class="w3-badge demo w3-border w3-transparent w3-hover-white"'
+			+ 'onclick="currentDiv({})"></span>'.format(str(CoCD))
+		))
+		CoCD += 1
+
+	htmlPics = ''.join((
+		'<div class="w3-content w3-display-container" style="min-height:180px">',
+			htmlImgs,
+			'<div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle"'
+			+ 'style="width:99.99%">',
+				'<div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>',
+				'<div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>',
+				htmlBdgs,
+			'</div>',
+		'</div>'
+	))
+
+	return None if NoBs is 0 else htmlPics
+#---
+
 def TheyLikeThem(x, y):
 	likes = r.hget(x, 'likes')
 	if likes is None:
@@ -29,9 +70,12 @@ def TheyLikeThem(x, y):
 def showUsers():
 	users = grabUsers()
 
+	for i in users : users.remove(i) if xPicsIn1Card(i) is None else 0
+
 	Cards = '<div class="dashRow">'
 	C = 0
 	while C < len(users):
+		# ---
 		uInfo = r.hgetall(users[C])
 		# ---
 		if C % 4 is 0:
@@ -40,9 +84,12 @@ def showUsers():
 		Cards += ''.join((
 			'<div class="column">',
 				'<div class="card">',
-					'<img class="img_avatar" src="" alt="" style="padding: 2.5px; width: 99.99%">',
+					xPicsIn1Card(users[C]), # <- where all the pictures come from ...
 					'<div class="blockBtn">',
-						'<a href="/%sHatesNo%s" class="blockBtn">' % (session['userIdNo'], users[C]),
+						'<a href="/%sHatesNo%s" class="blockBtn">' % (
+							session['userIdNo'],
+							users[C]
+						),
 							u'✘',
 						'</a>',
 					'</div>',
@@ -55,9 +102,10 @@ def showUsers():
 							u'♥',
 						'</a>',
 					'</div>',
+					'<h2 class="fameR">%s</h2>' % uInfo['fameR'],
 					'<div class="container">',
 						'<h4><b>%s</b></h4>' % uInfo['realName'],
-						'<p>%s</p>' % uInfo['Biography'] if uInfo['Biography'] is not None else None,
+						'<p>%s</p>' % uInfo['Biography'] if uInfo['Biography'] is not None else '_',
 					'</div>',
 				'</div>',
 			'</div>'
@@ -87,3 +135,15 @@ def unlike(x, y, likesArray):
 		likes += ' %s' % i
 
 	r.hset(session['userIdNo'], 'likes', likes)
+	#---
+	r.hset(
+		y,
+		'fameR',
+		int(
+			r.hget(
+				y,
+				'fameR'
+			)
+		) - 1
+	)
+	#---

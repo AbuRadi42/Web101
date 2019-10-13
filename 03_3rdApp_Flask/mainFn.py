@@ -193,6 +193,18 @@ def xLikesNoY(x, y):
 	# else ;
 	likes += ' %s' % y
 	r.hset(session['userIdNo'], 'likes', likes)
+	#---
+	r.hset(
+		y,
+		'fameR',
+		int(
+			r.hget(
+				y,
+				'fameR'
+			)
+		) + 1
+	)
+	#---
 	return index()
 
 @WebApp.route('/<x>HatesNo<y>')
