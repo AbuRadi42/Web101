@@ -24,7 +24,6 @@ initUserInfo = {
 	"userName":		"somethingUnique",
 	"realName":		"anyNameGoesHere",
 	"password":		"123456789ABCDEF",
-	"hash_key":		"FEDCBA987654321",
 	"e_mail":		"1Redis@Flask.py",
 	"pic1":			"1",
 	"pic2":			"2",

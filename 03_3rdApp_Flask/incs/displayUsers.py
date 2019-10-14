@@ -95,6 +95,24 @@ def showUsers():
 
 	for i in users : users.remove(i) if xPicsIn1Card(i) is None else 0
 
+	# pulling out the C mode since other method didn't work to do this:
+	hates = r.hget(session['userIdNo'], 'hates')
+	if hates is None:
+		hates = ''
+	hates = hates.split('_+_')
+	hates.remove('')
+	j = 0
+	while j < len(hates):
+		hates[j] = hates[j].split('_Y_')[0]
+		j += 1
+	k = 0
+	while k < len(hates):
+		if hates[k] in users:
+			users.remove(
+				hates[k]
+			)
+		k += 1
+
 	Cards = '<div class="dashRow">'
 	C = 0
 	while C < len(users):
@@ -109,10 +127,7 @@ def showUsers():
 				'<div class="card" title="%s">' % moreUserInfo(users[C]),
 					xPicsIn1Card(users[C]),
 					'<div class="blockBtn">',
-						'<a href="/%sHatesNo%s" class="blockBtn">' % (
-							session['userIdNo'],
-							users[C]
-						),
+						'<a href="/blockUserNo%s" class="blockBtn">' % users[C],
 							u'✘',
 						'</a>',
 					'</div>',

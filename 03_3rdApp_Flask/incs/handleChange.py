@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import redis
 
 from flask import session, flash
@@ -131,3 +133,24 @@ def handleUserInfoChange(
 
 	if ChangeFlag is False:
 		print "failed to change; nothing to change"
+
+def showBlocked():
+	hates = r.hget(session['userIdNo'], 'hates')
+	if hates is None:
+		return ''
+	hates = hates.split('_+_')
+
+	rstr = ''
+	index = 1
+	while index < len(hates):
+		line = hates[index].split('_Y_')
+		rstr += ''.join((
+			'<h5 class="blockedList">',
+				u'•'
+				+ ' [<a href="/unblockUserNo%s">unBlock</a>] ' % line[0]
+				+ r.hget(line[0], 'realName')
+				+ (', ' + line[1] if line[1] <> '#NoReason' else ''),
+			'</h5>'
+		))
+		index += 1
+	return rstr

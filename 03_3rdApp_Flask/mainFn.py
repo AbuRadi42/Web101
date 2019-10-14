@@ -12,7 +12,7 @@ from binascii import hexlify, unhexlify
 from signUp import userSignUp
 from Retrieve import sendEmail
 from displayUsers import showUsers, unlike
-from handleChange import handleUserInfoChange
+from handleChange import handleUserInfoChange, showBlocked
 from time import time, ctime
 
 r = redis.Redis()
@@ -72,7 +72,7 @@ def login():
 @WebApp.route('/logout')
 
 def logout():
-	if session['userIdNo'] is not None:
+	if session.get('loggedIn'):
 		print "User No. [\033[1m",
 		print session['userIdNo'],
 		print "\033[0m] just logged out"
@@ -82,7 +82,7 @@ def logout():
 		session['loggedIn'] = False
 		return index()
 	else:
-		return index()
+		return redirect('/')
 
 #--- Password Retrieving Mechanism ;
 
@@ -131,9 +131,10 @@ def userProfile():
 	userInfo = r.hgetall(session['userIdNo'])
 	return render_template(
 		'userProfile.html',
-		userName=userInfo['userName'],
-		realName=userInfo['realName'],
-		e_mail=userInfo['e_mail']
+		userName = userInfo['userName'],
+		realName = userInfo['realName'],
+		e_mail = userInfo['e_mail'],
+		pYDL = showBlocked()
 	)
 
 @WebApp.route('/infoChange', methods=['POST'])
@@ -202,7 +203,7 @@ def xLikesNoY(x, y):
 			return index()
 	# else ;
 	likes += ' %s' % y
-	r.hset(session['userIdNo'], 'likes', likes)
+	r.hset(x, 'likes', likes)
 	#---
 	r.hset(
 		y,
@@ -217,9 +218,45 @@ def xLikesNoY(x, y):
 	#---
 	return index()
 
-@WebApp.route('/<x>HatesNo<y>')
+@WebApp.route('/blockUserNo<y>')
 
-def xHatesNoY(x, y): # <- the fake thing is just going to be a part of 'why-blocked-them' string
+def blockUserNo(y):
+	return render_template(
+		'blockingForm.html',
+		x = session['userIdNo'],
+		y = y,
+		N = r.hget(y, 'realName')
+	)
+
+@WebApp.route('/<x>HatesNo<y>', methods=['POST'])
+
+def xHatesNoY(x, y):
+	POST_REASON = str(request.form['why'])
+	if POST_REASON == '':
+		POST_REASON = '#NoReason'
+
+	hates = r.hget(x, 'hates')
+	if hates is None:
+		hates = ''
+	hates += '_+_%s_Y_%s' % (y, POST_REASON)
+	r.hset(x, 'hates', hates)
+	return index()
+
+@WebApp.route('/unblockUserNo<y>')
+
+def unblockUserNo(y):
+	x = session['userIdNo']
+
+	hates = r.hget(x, 'hates')
+	if hates is None:
+		return index()
+	hates = hates.split('_+_')
+	for i in hates : hates.remove(i) if '%s_Y_' % y in i else 0
+	h, j = '', 1
+	while j < len(hates):
+		h += '_+_' + hates[j]
+		j += 1
+	r.hset(x, 'hates', h)
 	return index()
 
 #--- New User Registration Mechanism ;
@@ -254,7 +291,8 @@ def signup():
 	POST_SEXUALITY = str(request.form['sexuality'])
 
 	Biography = '' 
-	userSignUp(POST_USERNAME,
+	userSignUp(
+		POST_USERNAME,
 		POST_REALNAME,
 		POST_PASSWORD,
 		POST_E_MAIL,

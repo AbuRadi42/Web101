@@ -364,3 +364,8 @@ hr {
 	margin-right: -25px;
 	margin-top: 33.25%;
 }
+
+.blockedList {
+	color: gray;
+	font-size: 12px;
+}
