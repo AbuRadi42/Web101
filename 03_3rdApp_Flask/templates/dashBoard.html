@@ -1,79 +1,82 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 <ul style="min-width: 1130px;">
-	<li><a href="/">Home</a></li>
+	<li>
+		{{
+		Home | safe
+		}}
+	</li>
 	<li><a href="/profile">Profile</a></li>
 	<li><a href="/#">Notifs</a></li>
 	<li><a href="/#">Chat</a></li>
 	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
 </ul>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
 <style>
-	.mySlides {
-		
-	}
-	.w3-left, .w3-right, .w3-badge {
-		cursor: pointer;
-	}
-	.w3-badge {
-		height: 15px;
-		width: 15px;
-		padding: 0px 2.5px;
-		margin: 6.25px 2.5px 0px 2.5px;
-	}
-</style>
+.mySlides {}
 
+.w3-left,
+.w3-right,
+.w3-badge {
+	cursor: pointer;
+}
+
+.w3-badge {
+	height: 15px;
+	width: 15px;
+	padding: 0px 2.5px;
+	margin: 6.25px 2.5px 0px 2.5px;
+}
+</style>
 <div style="margin-top: -17.5px;">
 	{{
-		cards | safe
+	cards | safe
 	}}
 </div>
-
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 <script>
-	var slideIndex = 1;
-	showDivs(slideIndex);
+var slideIndex = 1;
+showDivs(slideIndex);
 
-	function plusDivs(n) {
-		showDivs(slideIndex += n);
+function plusDivs(n) {
+	showDivs(slideIndex += n);
+}
+
+function currentDiv(n) {
+	showDivs(slideIndex = n);
+}
+
+function showDivs(n) {
+	var i;
+	var x = document.getElementsByClassName("mySlides");
+	var dots = document.getElementsByClassName("demo");
+
+	if (n > x.length) {
+		slideIndex = 1
+	}
+	if (n < 1) {
+		slideIndex = x.length
+	}
+	for (i = 0; i < x.length; i++) {
+		x[i].style.display = "none";
+	}
+	for (i = 0; i < dots.length; i++) {
+		dots[i].className = dots[i].className.replace(" w3-white", "");
+	}
+	x[slideIndex - 1].style.display = "block";
+	dots[slideIndex - 1].className += " w3-white";
+}
+
+function truncateText(selector, maxLength) {
+	var element = document.querySelector(selector),
+		truncated = element.innerText;
+
+	if (truncated.length > maxLength) {
+		truncated = truncated.substr(0, maxLength) + '...';
 	}
 
-	function currentDiv(n) {
-		showDivs(slideIndex = n);
-	}
+	return truncated;
+}
 
-	function showDivs(n) {
-		var i;
-		var x = document.getElementsByClassName("mySlides");
-		var dots = document.getElementsByClassName("demo");
-
-		if (n > x.length) {
-			slideIndex = 1
-		}
-		if (n < 1) {
-			slideIndex = x.length
-		}
-		for (i = 0; i < x.length; i++) {
-			x[i].style.display = "none";	
-		}
-		for (i = 0; i < dots.length; i++) {
-			dots[i].className = dots[i].className.replace(" w3-white", "");
-		}
-		x[slideIndex-1].style.display = "block";	
-		dots[slideIndex-1].className += " w3-white";
-	}
-
-	function truncateText(selector, maxLength) {
-		var element = document.querySelector(selector),
-			truncated = element.innerText;
-
-		if (truncated.length > maxLength) {
-			truncated = truncated.substr(0, maxLength) + '...';
-		}
-
-		return truncated;
-	}
-
-	document.querySelector('p').innerText = truncateText('p', 24);
+document.querySelector('p').innerText = truncateText('p', 24);
 </script>

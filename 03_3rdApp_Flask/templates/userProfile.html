@@ -1,12 +1,15 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 <ul style="min-width: 800px;">
-	<li><a href="/">Home</a></li>
+	<li>
+		{{
+		Home | safe
+		}}
+	</li>
 	<li><a href="/profile">Profile</a></li>
 	<li><a href="/#">Notifs</a></li>
 	<li><a href="/#">Chat</a></li>
 	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
 </ul>
-
 <div class="userInfo" style="min-width: 797.5px;">
 	<div class="row">
 		<div class="column">
@@ -108,7 +111,7 @@
 				<div class="column" style="margin-left: 12.5px; margin-top: -12.5px; max-width: fit-content;">
 					<h3 style="font-size: 12px; color: gray;">People you don't like:</h3>
 					{{
-						pYDL | safe
+					pYDL | safe
 					}}
 				</div>
 			</div>

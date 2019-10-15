@@ -85,6 +85,8 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biograp
 	initUserInfo['Following'] = ""
 	initUserInfo['Biography'] = "_"
 
+	initUserInfo['fameR'] = "0"
+
 	if r.hmset(new_IdNo, initUserInfo):
 		print "User No. [\033[1m",
 		print new_IdNo,

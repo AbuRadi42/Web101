@@ -6,13 +6,23 @@ from flask import session
 
 r = redis.Redis()
 
+# ---
+def Home():
+	userPics = r.hmget(session['userIdNo'], 'pic1', 'pic2', 'pic3', 'pic4', 'pic5')
+	NoBs = 0
+	for i in userPics : NoBs += (1 if i is not None else 0)
+	if (NoBs > 0):
+		return '<a href="/">Home</a>'
+	else:
+		return '<a href="#" class="noPicsHome">Home</a>'
+# ---
+
 def grabUsers():
 	users = []
 	for key in r.scan_iter("*"):
 		if len(key) is 4:
 			users.append(key)
 	users.remove(session['userIdNo'])
-
 	return users
 
 def getSexuality(gender, Sexuality):
@@ -28,14 +38,12 @@ def getSexuality(gender, Sexuality):
 
 def moreUserInfo(userId):
 	uInfo = r.hgetall(userId)
-
 	rstr = uInfo['Connection'] + ('&#13;' * 2)
 	rstr += 'Location: ' + uInfo['Location'] + '&#13;'
-
 	rstr += 'Gender: ' + (u'♂' if uInfo['gender'] == '1' else u'♀') + ', '
 	rstr += 'Sexuality: ' + getSexuality(uInfo['gender'], uInfo['Sexuality']) + '&#13;'
-	rstr += 'Interests: ' + uInfo['Interests'] + '&#13;'
-	rstr += 'Biography: ' + uInfo['Biography'] + '&#13;'
+	rstr += ('Interests: ' + uInfo['Interests'] + '&#13;') if uInfo.get('Interests') else ''
+	rstr += ('Biography: ' + uInfo['Biography'] + '&#13;') if uInfo.get('Biography') else ''
 	return rstr
 
 #---
@@ -90,6 +98,14 @@ def TheyLikeThem(x, y):
 	# else ;
 	return False
 
+#---
+def common_interest(x, y):
+	if TheyLikeThem(x, y) and TheyLikeThem(y, x):
+		return '<i class="far fa-comment-dots"></i>' # <- &#xf4ad;
+	else:
+		return ''
+#---
+
 def showUsers():
 	users = grabUsers()
 
@@ -112,6 +128,26 @@ def showUsers():
 				hates[k]
 			)
 		k += 1
+	# removing the users who blocked you on their side from [dashBoard]
+	l = 0
+	while l < len(users):
+		uhates = r.hget(users[l], 'hates')
+		if uhates is None:
+			l += 1
+			continue
+		uhates = uhates.split('_+_')
+		uhates.remove('')
+		m = 0
+		while m < len(uhates):
+			uhates[m] = uhates[m].split('_Y_')[0]
+			m += 1
+		n = 0
+		while n < len(uhates):
+			if session['userIdNo'] in uhates:
+				users.remove(users[l])
+				break
+			n += 1
+		l += 1
 
 	Cards = '<div class="dashRow">'
 	C = 0
@@ -142,7 +178,12 @@ def showUsers():
 					'</div>',
 					'<h2 class="fameR">%s</h2>' % uInfo['fameR'],
 					'<div class="container">',
-						'<h4><b>%s</b></h4>' % uInfo['realName'],
+						'<h4><b>%s <a href="%schatingTo%s" class="chatBtn">%s</a></b></h4>' % (
+							uInfo['realName'],
+							session['userIdNo'],
+							users[C],
+							common_interest(session['userIdNo'], users[C])
+						),
 						'<p>%s</p>' % uInfo['Biography'] if uInfo['Biography'] is not None else '_',
 					'</div>',
 				'</div>',

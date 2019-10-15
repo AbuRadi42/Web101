@@ -11,7 +11,7 @@ from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from signUp import userSignUp
 from Retrieve import sendEmail
-from displayUsers import showUsers, unlike
+from displayUsers import Home, showUsers, unlike
 from handleChange import handleUserInfoChange, showBlocked
 from time import time, ctime
 
@@ -25,7 +25,11 @@ def index():
 	if not session.get('loggedIn'):
 		return render_template('loginForm.html')
 	else:
-		return render_template('dashBoard.html', cards = showUsers())
+		return render_template(
+			'dashBoard.html',
+			Home = Home(),
+			cards = showUsers()
+		)
 
 @WebApp.route('/login', methods=['POST'])
 
@@ -67,7 +71,10 @@ def login():
 		print hashName,
 		print "\033[0m] failed to log in; wrong password."
 		flash('wrong password!')
-	return index()
+	if Home() == '<a href="#" class="noPicsHome">Home</a>':
+		return redirect('/profile')
+	else:
+		return redirect('/')
 
 @WebApp.route('/logout')
 
@@ -131,6 +138,7 @@ def userProfile():
 	userInfo = r.hgetall(session['userIdNo'])
 	return render_template(
 		'userProfile.html',
+		Home = Home(),
 		userName = userInfo['userName'],
 		realName = userInfo['realName'],
 		e_mail = userInfo['e_mail'],
@@ -258,6 +266,17 @@ def unblockUserNo(y):
 		j += 1
 	r.hset(x, 'hates', h)
 	return index()
+
+#--- Chat & Notifications Mechanisms ;
+
+@WebApp.route('/<x>chatingTo<y>')
+
+def xChatingToY(x, y):
+	return render_template(
+		'xChatingToY.html',
+		Home = Home(),
+		Msgs = MsgsBtwn(x, y)
+	)
 
 #--- New User Registration Mechanism ;
 

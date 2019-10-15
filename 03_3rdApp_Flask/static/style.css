@@ -117,6 +117,14 @@ li a {
 	text-decoration: none;
 }
 
+.noPicsHome {
+	display: block;
+	color: gray;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
 /* Change the link color to #111 (black) on hover */
 li a:hover {
 	background-color: #111;
@@ -247,16 +255,17 @@ li a:hover {
 	padding: 2.5px;
 	margin: 1.25px;
 	background-color: white;
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	transition: 0.3s;
-	border-radius: 5px; /* 5px rounded corners */
+	border-radius: 5px;
+	/* 5px rounded corners */
 	min-width: 270px;
 	height: 309px;
 }
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
-	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Add rounded corners to the top left and the top right corner of the image */
@@ -282,18 +291,17 @@ p {
 
 .userInfo {
 	background-color: white;
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	transition: 0.3s;
-	border-radius: 5px; /* 5px rounded corners */
+	border-radius: 5px;
+	/* 5px rounded corners */
 	height: fit-content;
 	padding: 2.5px;
 	margin: 4.5px 1.25px 1.25px 1.25px;
 	min-width: 520px;
 }
 
-.userInfoCont {
-
-}
+.userInfoCont {}
 
 .userInfoText {
 	font-size: 14.25px;
@@ -302,9 +310,7 @@ p {
 	margin-left: 5px;
 }
 
-.userinfo-group {
-
-}
+.userinfo-group {}
 
 .userinfo-field {
 	margin-bottom: 10px;
@@ -368,4 +374,10 @@ hr {
 .blockedList {
 	color: gray;
 	font-size: 12px;
+}
+
+.chatBtn {
+	text-decoration: none !important;
+	font-size: 24px;
+	color: silver;
 }
