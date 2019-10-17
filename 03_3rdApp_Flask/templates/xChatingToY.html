@@ -2,16 +2,40 @@
 <ul style="min-width: 1130px;">
 	<li>
 		{{
-		Home | safe
+			Home | safe
 		}}
 	</li>
 	<li><a href="/profile">Profile</a></li>
-	<li><a href="/#">Notifs</a></li>
+	<li><a href="/notifs">Notifs{{Notifs | safe}}</a></li>
 	<li><a href="/#">Chat</a></li>
 	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
 </ul>
-<div class="userInfo" style="min-width: 797.5px;">
+
+<div class="ChatScreen">
 	{{
-	Msgs | safe
+		Msgs | safe
 	}}
+</div>
+
+<div style="position: relative; bottom: 0;">
+	<div class="writingMachine">
+		<form action="/sendMsgTo{{y}}" method="POST">
+			<a class="login-form">
+			<div class="row msgScreen">
+				<div class="column" style="margin-top: 0px; flex: 1;">
+					<input type="text"
+						class="login-field msgField"
+						style="width: inherit;"
+						value=""
+						placeholder="type your massage here"
+						name="yourMsg">
+					<label class="login-field-icon fui-user" for="login-name">
+					</label>
+				</div>
+				<div class="column" style="margin-top: 0px; flex: 0;">
+					<input type="submit" value="Send" class="btn btn-primary btn-large btn-block msgBtn">
+				</div>
+			</div>
+		</form>
+	</div>
 </div>

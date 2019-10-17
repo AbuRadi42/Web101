@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<ul style="min-width: 1130px;">
+	<li>
+		{{
+			Home | safe
+		}}
+	</li>
+	<li><a href="/profile">Profile</a></li>
+	<li><a href="/notifs">Notifs{{Notifs | safe}}</a></li>
+	<li><a href="/#">Chat</a></li>
+	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
+</ul>
+
+<div class="ChatScreen">
+	{{
+		notifList | safe
+	}}
+</div>

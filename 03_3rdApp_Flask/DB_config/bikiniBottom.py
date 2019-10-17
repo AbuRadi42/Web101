@@ -126,7 +126,7 @@ Character = [
 		"5",
 		1,
 		0,
-		1,
+		-1,
 		"I only talk to my father because of his wealth",
 		"Food",
 		0

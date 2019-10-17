@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, flash, redirect, render_template, request, session, abort
 
 import os
@@ -13,6 +15,8 @@ from signUp import userSignUp
 from Retrieve import sendEmail
 from displayUsers import Home, showUsers, unlike
 from handleChange import handleUserInfoChange, showBlocked
+from ShowMsgsBtwn import MsgsBtwn
+from Notifs import Notifs, notifList
 from time import time, ctime
 
 r = redis.Redis()
@@ -28,10 +32,11 @@ def index():
 		return render_template(
 			'dashBoard.html',
 			Home = Home(),
+			Notifs = Notifs(),
 			cards = showUsers()
 		)
 
-@WebApp.route('/login', methods=['POST'])
+@WebApp.route('/login', methods = ['POST'])
 
 def login():
 	POST_USERNAME = str(request.form['username'])
@@ -98,7 +103,7 @@ def logout():
 def passRetrieveFrom():
 	return render_template('Retrieve.html')
 
-@WebApp.route('/passRetrieve', methods=['POST'])
+@WebApp.route('/passRetrieve', methods = ['POST'])
 
 def passRetrieve():
 	POST_USERNAME = str(request.form['username'])
@@ -125,7 +130,7 @@ def passRetrieve():
 def passResetFrom():
 	return render_template('passResetFrom.html')
 
-@WebApp.route('/passReset', methods=['POST'])
+@WebApp.route('/passReset', methods = ['POST'])
 
 def passReset():
 	return index()
@@ -139,13 +144,14 @@ def userProfile():
 	return render_template(
 		'userProfile.html',
 		Home = Home(),
+		Notifs = Notifs(),
 		userName = userInfo['userName'],
 		realName = userInfo['realName'],
 		e_mail = userInfo['e_mail'],
 		pYDL = showBlocked()
 	)
 
-@WebApp.route('/infoChange', methods=['POST'])
+@WebApp.route('/infoChange', methods = ['POST'])
 
 def infoChange():
 	POST_USERNAME = str(request.form['username'])
@@ -223,6 +229,14 @@ def xLikesNoY(x, y):
 			)
 		) + 1
 	)
+	r.hset(
+		'notifsOf%s' % y,
+		str(time()),
+		'(l)[%s] %s liked you' % (
+			ctime(time()),
+			session['userIdNo'],
+		)
+	)
 	#---
 	return index()
 
@@ -236,7 +250,7 @@ def blockUserNo(y):
 		N = r.hget(y, 'realName')
 	)
 
-@WebApp.route('/<x>HatesNo<y>', methods=['POST'])
+@WebApp.route('/<x>HatesNo<y>', methods = ['POST'])
 
 def xHatesNoY(x, y):
 	POST_REASON = str(request.form['why'])
@@ -269,13 +283,56 @@ def unblockUserNo(y):
 
 #--- Chat & Notifications Mechanisms ;
 
+@WebApp.route('/notifs')
+
+def notifListRoute():
+	return render_template(
+		'notifList.html',
+		Home = Home(),
+		Notifs = Notifs(),
+		notifList = notifList()
+	)
+
 @WebApp.route('/<x>chatingTo<y>')
 
 def xChatingToY(x, y):
 	return render_template(
 		'xChatingToY.html',
 		Home = Home(),
-		Msgs = MsgsBtwn(x, y)
+		Notifs = Notifs(),
+		Msgs = MsgsBtwn(x, y),
+		y = y
+	)
+
+@WebApp.route('/sendMsgTo<y>', methods = ['POST'])
+
+def sendMsgToY(y):
+	POST_MESSAGE = str(request.form['yourMsg'])
+
+	r.hset(
+		'%s_to_%s' % (
+			session['userIdNo'],
+			y
+		),
+		str(time()),
+		session['userIdNo'] + '_|_' + POST_MESSAGE
+	)
+
+	r.hset(
+		'notifsOf%s' % y,
+		str(time()),
+		'(m)[%s] %s sent you a message: %s' % (
+			ctime(time()),
+			session['userIdNo'],
+			POST_MESSAGE[0:24]
+		)
+	)
+
+	return redirect(
+		'/%schatingTo%s' % (
+			session['userIdNo'],
+			y
+		)
 	)
 
 #--- New User Registration Mechanism ;
@@ -285,7 +342,7 @@ def xChatingToY(x, y):
 def nwusrForm():
 	return render_template('nwusrForm.html')
 
-@WebApp.route('/signup', methods=['POST'])
+@WebApp.route('/signup', methods = ['POST'])
 
 def signup():
 	POST_USERNAME = str(request.form['username'])
@@ -325,4 +382,17 @@ def signup():
 
 if __name__ == '__main__':
 	WebApp.secret_key = os.urandom(12)
-	WebApp.run(host='0.0.0.0', port=4000, debug=True)
+	WebApp.run(host = '0.0.0.0', port = 4000, debug = True)
+
+# This project was submitted on the Nth of Oct, 2019. Score: X.x%
+#
+# > Things to improve when possible:
+#
+# - Gender & Sexuality need to match those of the user's in the userProfile
+#
+# - The writingMachine needs to be floating to the bottom of the window
+#
+# - An entire HTML/CSS userProfile of others needs to be added
+#
+# - Unsatisfied pionts of the subject need to be added
+#
