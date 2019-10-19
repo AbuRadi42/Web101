@@ -3,12 +3,13 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
 from validate_email import validate_email
+from Retrieve import sendVerificationText
 
 import redis
 
 r = redis.Redis()
 
-def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biography):
+def userSignUp(app, userName0, realName, password, e_mail, gender, Sexuality, Biography):
 	# userName check
 	for hashName in r.keys("0*"):
 		userName1 = r.hget(hashName, "userName")
@@ -67,7 +68,11 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biograp
 
 	# Redis data
 	new_IdNo = str(0).zfill(4)
-	for idNo in r.keys("0*"):
+	users = []
+	for key in r.keys("0*"):
+		if len(key) is 4:
+			users.append(key)
+	for idNo in users:
 		if int(idNo, 10) > int(new_IdNo):
 			new_IdNo = idNo
 	new_IdNo = str(int(new_IdNo, 10) + 1).zfill(4)
@@ -87,12 +92,12 @@ def userSignUp(userName0, realName, password, e_mail, gender, Sexuality, Biograp
 
 	initUserInfo['fameR'] = "0"
 
+	sendVerificationText(app, e_mail, new_IdNo)
+
 	if r.hmset(new_IdNo, initUserInfo):
 		print "User No. [\033[1m",
 		print new_IdNo,
 		print "\033[0m] just signed up"
 		return new_IdNo
-
-	# send a varification email
 
 	# print initUserInfo['password']

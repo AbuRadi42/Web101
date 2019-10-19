@@ -368,6 +368,7 @@ def signup():
 
 	Biography = '' 
 	userSignUp(
+		WebApp,
 		POST_USERNAME,
 		POST_REALNAME,
 		POST_PASSWORD,
@@ -378,6 +379,24 @@ def signup():
 	)
 	return index()
 
+@WebApp.route('/verify<y>')
+
+def verify(y):
+	crntStatus = r.hget(y, 'active')
+	if crntStatus is None:
+		print "failed to verify; user doesn't exist"
+		return index()
+	elif crntStatus == '1':
+		print "failed to verify; user is already verified"
+		return index()
+	elif crntStatus == '0':
+		r.hset(y, 'active', 1)
+		print "verification of %s is successful" % y
+		return index()
+	else:
+		print "failed to verify; check your Redis connection"
+		return index()
+
 #--- MainFn
 
 if __name__ == '__main__':
@@ -387,6 +406,8 @@ if __name__ == '__main__':
 # This project was submitted on the Nth of Oct, 2019. Score: X.x%
 #
 # > Things to improve when possible:
+#
+# - Flask dynamic data update, not a requirement but important
 #
 # - Gender & Sexuality need to match those of the user's in the userProfile
 #
