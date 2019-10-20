@@ -53,7 +53,7 @@ def userSignUp(app, userName0, realName, password, e_mail, gender, Sexuality, Bi
 		print "failed to sign up; password missing number(s)"
 	if upperCFlag is False or lowerCFlag is False or numberFlag is False:
 		return 0
-	if len(password) < 10:
+	if len(password) < 8:
 		print "failed to sign up; password is too short"
 		return 0
 	encrypted = hexlify(encrypt(userName0[::-1], password))
@@ -92,7 +92,7 @@ def userSignUp(app, userName0, realName, password, e_mail, gender, Sexuality, Bi
 
 	initUserInfo['fameR'] = "0"
 
-	sendVerificationText(app, e_mail, new_IdNo)
+	sendVerificationText(e_mail, new_IdNo)
 
 	if r.hmset(new_IdNo, initUserInfo):
 		print "User No. [\033[1m",

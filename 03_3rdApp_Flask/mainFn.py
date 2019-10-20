@@ -121,8 +121,62 @@ def passRetrieve():
 			return index()
 		else:
 			e_mail = r.hget(hashName, 'e_mail')
-			sendEmail(hashName, e_mail)
+			sendEmail(hashName, r.hget(hashName, "realName"), e_mail)
 			print "\nan email was sent to %s\n" % e_mail
+	return index()
+
+@WebApp.route('/newPasswordForm_<y>')
+
+def newPasswordForm(y):
+	return render_template(
+		'newPasswordForm.html',
+		y = y,
+		realName = r.hget(y, "raelName")
+	)
+
+@WebApp.route('/newPasswordSet_<y>', methods = ['POST'])
+
+def newPasswordSet(y):
+	POST_PASSWORD = str(request.form['password'])
+	POST_CONFRIM = str(request.form['confirm'])
+	if POST_PASSWORD == "" or POST_CONFRIM == "":
+		print "\nfailed to get the password; type it in the form\n"
+	else:
+		if POST_PASSWORD <> POST_CONFRIM:
+			print "failed to change the password; unconfirmed password"
+			return index()
+		else:
+			# password check
+			password = POST_PASSWORD
+
+			upperCFlag = False
+			lowerCFlag = False
+			numberFlag = False
+			for i in password:
+				if i.isalpha():
+					if i.isupper():
+						upperCFlag = True
+					elif i.islower():
+						lowerCFlag = True
+				elif i.isdigit():
+					numberFlag = True
+			if upperCFlag is False:
+				# flash('your password needs to have at least on capital latter')
+				print "failed to sign up; password missing capital latter(s)"
+			if lowerCFlag is False:
+				# flash('your password needs to have at least on small latter')
+				print "failed to sign up; password missing small latter(s)"
+			if numberFlag is False:
+				# flash('your password needs to have at least on number')
+				print "failed to sign up; password missing number(s)"
+			if upperCFlag is False or lowerCFlag is False or numberFlag is False:
+				return index()
+			if len(password) < 8:
+				print "failed to sign up; password is too short"
+				return index()
+			encrypted = hexlify(encrypt(r.hget(y, 'userName')[::-1], password))
+			r.hset(y, 'password', encrypted)
+			print "changed password successfully"
 	return index()
 
 @WebApp.route('/passResetFrom')
