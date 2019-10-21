@@ -205,7 +205,7 @@ def userProfile():
 		pYDL = showBlocked()
 	)
 
-@WebApp.route('/infoChange', methods = ['POST'])
+@WebApp.route('/infoChange', methods = ['GET', 'POST'])
 
 def infoChange():
 	POST_USERNAME = str(request.form['username'])

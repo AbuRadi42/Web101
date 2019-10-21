@@ -63,26 +63,38 @@ def xPicsIn1Card(userId):
 			))
 			NoBs += 1
 
-	htmlBdgs = ''
-	CoCD = 1
-	while CoCD <= NoBs:
-		htmlBdgs += ''.join((
-			'<span class="w3-badge demo w3-border w3-transparent w3-hover-white"'
-			+ 'onclick="currentDiv({})"></span>'.format(str(CoCD))
-		))
-		CoCD += 1
+	if NoBs > 1:
+		htmlBdgs = ''
+		CoCD = 1
+		while CoCD <= NoBs:
+			htmlBdgs += ''.join((
+				'<span class="w3-badge demo w3-border w3-transparent w3-hover-white"'
+				+ 'onclick="currentDiv({})"></span>'.format(str(CoCD))
+			))
+			CoCD += 1
 
-	htmlPics = ''.join((
-		'<div class="w3-content w3-display-container" style="min-height:180px">',
-			htmlImgs,
-			'<div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle"'
-			+ 'style="width:99.99%">',
-				'<div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>',
-				'<div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>',
-				htmlBdgs,
-			'</div>',
-		'</div>'
-	))
+		htmlPics = ''.join((
+			'<div class="w3-content w3-display-container" style="min-height:180px">',
+				htmlImgs,
+				'<div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle"'
+				+ 'style="width:99.99%">',
+					'<div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>',
+					'<div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>',
+					htmlBdgs,
+				'</div>',
+			'</div>'
+		))
+	else:
+		htmlPics = ''.join((
+			'<div class="w3-content w3-display-container" style="min-height:180px">',
+				htmlImgs, # <- 1 pic
+				'<div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle"'
+				+ 'style="width:99.99%">',
+					'<div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>',
+					'<div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>',
+				'</div>',
+			'</div>'
+		))
 
 	return None if NoBs is 0 else htmlPics
 #---
@@ -110,6 +122,8 @@ def showUsers():
 	users = grabUsers()
 
 	for i in users : users.remove(i) if xPicsIn1Card(i) is None else 0
+
+	for i in users : users.remove(i) if r.hget(i, 'active') == '0' else 0
 
 	# pulling out the C mode since other method didn't work to do this:
 	hates = r.hget(session['userIdNo'], 'hates')
