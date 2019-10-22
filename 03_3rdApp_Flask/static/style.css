@@ -273,7 +273,7 @@ li a:hover {
 	border-radius: 5px;
 	max-height: 180px;
 	min-height: 180px;
-	z-index: 1;
+	z-index: -1;
 }
 
 /* Add some padding inside the card container */

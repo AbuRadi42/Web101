@@ -6,6 +6,7 @@ import os
 import redis
 import sys
 import commands
+import base64
 
 sys.path.insert(0, './incs')
 
@@ -18,6 +19,13 @@ from handleChange import handleUserInfoChange, showBlocked
 from ShowMsgsBtwn import MsgsBtwn
 from Notifs import Notifs, notifList
 from time import time, ctime
+from werkzeug.utils import secure_filename
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+	return '.' in filename and \
+	filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 r = redis.Redis()
 
@@ -240,6 +248,24 @@ def infoChange():
 		Interests,
 		POST_SEXUALITY
 	)
+
+	if request.method == 'POST':
+		if 'file' not in request.files:
+			flash('No picture chosen')
+			print 'No picture chosen'
+		else:
+			file = request.files['file']
+			if file.filename == '':
+				flash('No file selected for uploading')
+				print 'No file selected for uploading'
+			elif file and allowed_file(file.filename):
+				inputStr = base64.b64encode(file.read())
+				r.hset(session['userIdNo'], 'pic1', inputStr)
+				flash('Picture successfully uploaded')
+				print 'Picture successfully uploaded'
+			else:
+				flash('Not a valied format')
+				print 'Not a valied format'
 	return index()
 
 @WebApp.route('/deleteUserRoute')

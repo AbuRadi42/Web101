@@ -54,12 +54,24 @@ def xPicsIn1Card(userId):
 	htmlImgs = ''
 	NoBs = 0
 	for i in userPics:
-		if i is not None:
+		if i is not None and i <> '':
 			htmlImgs += ''.join((
-				'<img class="img_avatar mySlides" src="" style="image: url(\'{}\');" '.format(
-					'data:image/jpeg;base64,' + i # <- find a way to encrypt pictures
+				# '<img class="img_avatar mySlides" src="data:image/png;base64, %s"' % (
+				# 	r.hget(userId, 'pic1')
+				# )
+				# + 'style="padding: 2.5px; width: 100%%">'
+				'<div style="%s %s %s %s %s %s %s %s %s %s"></div>' % (
+					'background-color: #cccccc;',
+					'background-image: url(\'data:image/png;base64, %s\');' % r.hget(userId, 'pic1'),
+					'background-repeat: no-repeat;',
+					'background-position: center;',
+					'background-size: contain;',
+					'background-size: cover;',
+					'height: 180px;',
+					'width: 100%;',
+					'border-radius: 3px;',
+					'margin-top: -.0px;'
 				)
-				+ 'style="padding: 2.5px; width: 100%">'
 			))
 			NoBs += 1
 
@@ -87,11 +99,9 @@ def xPicsIn1Card(userId):
 	else:
 		htmlPics = ''.join((
 			'<div class="w3-content w3-display-container" style="min-height:180px">',
-				htmlImgs, # <- 1 pic
+				htmlImgs, # <- pic1
 				'<div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle"'
 				+ 'style="width:99.99%">',
-					'<div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>',
-					'<div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>',
 				'</div>',
 			'</div>'
 		))

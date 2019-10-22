@@ -71,7 +71,7 @@
 	text-align: center;
 	overflow: hidden;
 	display: inline-block;
-	margin-top: 24px;
+	margin-top: 60px;
 }
 
 .dropzone:is-dragover {
@@ -161,20 +161,10 @@ $("input:file").change(function (){
 	$('.dropzone .upload').hide();
 });
 
-function startUpload() {
-	if (!uploading && fileName != '' ) {
-		uploading = true;
-		$button.html('Uploading...');
-		$dropzone.fadeOut();
-		$bar.addClass('active');
-		timeoutID = window.setTimeout(showDone, 3200);
-	}
-}
-
 </script>
 
 <div class="userInfo" style="min-width: 797.5px;">
-	<form action="/infoChange" method="POST" style="margin-bottom: 5px;">
+	<form action="/infoChange" method="POST" style="margin-bottom: 5px;" enctype="multipart/form-data">
 		<div class="row">
 			<div class="column" style="text-align: center">
 				<div class="center">
@@ -186,8 +176,6 @@ function startUpload() {
 							<input type="file" class="input" name="file">
 						</div>
 					</div>
-					<br><br><br>
-					<div class="upload-btn">Upload file</div>
 				</div>
 			</div>
 		</div>
