@@ -68,6 +68,14 @@ input:focus {
 	box-shadow: none;
 }
 
+.researchBtn {
+	background-color: transparent;
+	border: 1px solid transparent;
+	height: 42.5px;
+	width: 42px;
+	color: white;
+}
+
 .btn {
 	border: 2px solid transparent;
 	background: #3498DB;

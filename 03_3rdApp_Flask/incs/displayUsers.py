@@ -19,7 +19,7 @@ def Home():
 
 def grabUsers():
 	users = []
-	for key in r.scan_iter("*"):
+	for key in r.scan_iter("0*"):
 		if len(key) is 4:
 			users.append(key)
 	users.remove(session['userIdNo'])
@@ -128,12 +128,15 @@ def common_interest(x, y):
 		return ''
 #---
 
-def showUsers():
+def showUsers(usersToLeave):
 	users = grabUsers()
 
 	for i in users : users.remove(i) if xPicsIn1Card(i) is None else 0
 
 	for i in users : users.remove(i) if r.hget(i, 'active') == '0' else 0
+
+	if usersToLeave is not None and usersToLeave <> []:
+		for i in usersToLeave : users.remove(i) if i in users else 0
 
 	# pulling out the C mode since other method didn't work to do this:
 	hates = r.hget(session['userIdNo'], 'hates')

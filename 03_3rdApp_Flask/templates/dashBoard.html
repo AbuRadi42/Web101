@@ -1,4 +1,6 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/static/style.css" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <ul style="min-width: 1130px;">
 	<li>
 		{{
@@ -7,6 +9,27 @@
 	</li>
 	<li><a href="/profile">Profile</a></li>
 	<li><a href="/notifs">Notifs{{Notifs | safe}}</a></li>
+	<!-- last touch -->
+	<form action="/search" method="POST" style="margin-top: -15px;">
+		<li>
+			<button type="submit" class="researchBtn">
+				<i class="fa fa-search" style="font-size: 27px; padding-top: 7.5px;"></i>
+			</button>
+		</li>
+		<li>
+			<input
+				type="text"
+				class="login-field"
+				value=""
+				placeholder="type your keywords here"
+				name="searchTxt"
+				style="margin-top: 1.5px; "
+			>
+			<label class="login-field-icon fui-user" for="login-name">
+			</label>
+		</li>
+	</form>
+	<!-- last touch -->
 	<li style="float:right"><a class="active" href="/logout">Logout</a></li>
 </ul>
 <meta name="viewport" content="width=device-width, initial-scale=1">

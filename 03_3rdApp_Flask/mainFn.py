@@ -18,8 +18,8 @@ from displayUsers import Home, showUsers, unlike
 from handleChange import handleUserInfoChange, showBlocked
 from ShowMsgsBtwn import MsgsBtwn
 from Notifs import Notifs, notifList
+from Search import unsearchedUsers
 from time import time, ctime
-from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -41,7 +41,7 @@ def index():
 			'dashBoard.html',
 			Home = Home(),
 			Notifs = Notifs(),
-			cards = showUsers()
+			cards = showUsers([])
 		)
 
 @WebApp.route('/login', methods = ['POST'])
@@ -476,6 +476,20 @@ def verify(y):
 	else:
 		print "failed to verify; check your Redis connection"
 		return index()
+
+#--- Search / Filter Mechanism ;
+
+@WebApp.route('/search', methods = ['POST'])
+
+def search():
+	POST_SEARCH = str(request.form['searchTxt'])
+	usersToLeave = unsearchedUsers(POST_SEARCH)
+	return render_template(
+		'dashBoard.html',
+		Home = Home(),
+		Notifs = Notifs(),
+		cards = showUsers(usersToLeave)
+	)
 
 #--- MainFn
 
