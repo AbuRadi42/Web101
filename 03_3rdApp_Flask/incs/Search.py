@@ -33,11 +33,11 @@ def unsearchedUsers(search):
 		# normal search / filter
 		else:
 			for j in everyOne:
-				if i in r.hget(j, 'realName').split():
+				if i in str(r.hget(j, 'realName')).split():
 					everyOne.remove(j) if j in everyOne else 0
-				elif i in r.hget(j, 'Location').split():
+				elif i in str(r.hget(j, 'Location')).split():
 					everyOne.remove(j) if j in everyOne else 0
-				elif i in r.hget(j, 'Interests').split(', '):
+				elif i in str(r.hget(j, 'Interests')).split(', '):
 					everyOne.remove(j) if j in everyOne else 0
 
 	rtrnList = everyOne
