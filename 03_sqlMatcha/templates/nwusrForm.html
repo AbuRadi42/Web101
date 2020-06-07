@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+<form action="/signup" method="POST">
+	<div class="login">
+		<div class="login-screen">
+			<!-- Add a "Go Back" bottun here -->
+			<div class="app-title">
+				<h1>Sign Up</h1>
+			</div>
+			<div class="login-form">
+				<div class="control-group">
+					<input type="text" class="login-field" value="" placeholder="userName" name="username">
+					<label class="login-field-icon fui-user">
+					</label>
+				</div>
+				<div class="control-group">
+					<input type="text" class="login-field" value="" placeholder="realName" name="realname">
+					<label class="login-field-icon fui-user">
+					</label>
+				</div>
+				<div class="control-group">
+					<input type="password" class="login-field" value="" placeholder="password" name="password">
+					<label class="login-field-icon fui-lock">
+					</label>
+				</div>
+				<div class="control-group">
+					<input type="password" class="login-field" value="" placeholder="[confirm]" name="repeat">
+					<label class="login-field-icon fui-lock">
+					</label>
+				</div>
+				<div class="control-group">
+					<input type="text" class="login-field" value="" placeholder="e @ mail" name="e_mail">
+					<label class="login-field-icon fui-user">
+					</label>
+				</div>
+				<div style="float:right; padding-right: 4.5px;" class="control-group">
+					<select class="sexuality" name="sexuality">
+						<option value="1">heteroSexual</option>
+						<option value="-1">homoSexual</option>
+						<option value="0">biSexual</option>
+					</select>
+				</div>
+				<div class="onoffswitch">
+					<input type="checkbox" class="onoffswitch-checkbox" id="onOffSwitch" name="gender" checked>
+					<label class="onoffswitch-label" for="onOffSwitch">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>
+				<br style="margin-bottom: 10px" />
+				<input type="submit" value="Register" class="btn btn-primary btn-large btn-block">
+			</div>
+		</div>
+	</div>
+</form>
