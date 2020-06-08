@@ -1,11 +1,18 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+
 <form action="/signup" method="POST">
 	<div class="login">
+		<div class="app-name">
+			<h2> Matcha </h2>
+		</div>
 		<div class="login-screen">
 			<!-- Add a "Go Back" bottun here -->
 			<div class="app-title">
-				<h1>Sign Up</h1>
+				<h1>
+					<a href="/" style="text-decoration: none;">
+						&#x219C;
+					</a> Sign Up <a href="" style="color: white;">?</a></h1>
 			</div>
 			<div class="login-form">
 				<div class="control-group">
@@ -14,7 +21,7 @@
 					</label>
 				</div>
 				<div class="control-group">
-					<input type="text" class="login-field" value="" placeholder="realName" name="realname">
+					<input type="text" class="login-field" value="" placeholder="nickName" name="realname">
 					<label class="login-field-icon fui-user">
 					</label>
 				</div>
@@ -51,5 +58,19 @@
 				<input type="submit" value="Register" class="btn btn-primary btn-large btn-block">
 			</div>
 		</div>
+		<!-- <h4>...</h4> -->
 	</div>
 </form>
+
+{% with messages = get_flashed_messages(with_categories = true) %}
+
+	<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+
+	{% if messages %}
+		{% for category, e in messages %}
+			<div class="alert alert-{{ category }} alert-dismissible" role="alert">
+				<!-- <strong>Title</strong> --> {{ e }}
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endwith %}

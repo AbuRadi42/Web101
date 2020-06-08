@@ -432,3 +432,37 @@ hr {
 	margin-left: 5px;
 	margin-right: 5px;
 }
+
+.alert {
+	width: 300px;
+	padding: 12px;
+	border-radius: 5px;
+	font-size: .9rem;
+	margin-bottom: 16px;
+	border-width: 2px;
+	text-align: center;
+	opacity: 0.5;
+
+	transition: visibility 0s, opacity 1.5s linear;
+}
+
+.alert-warning {
+	margin: -43.49% auto -20px auto;
+	border-color: darkred;
+	background-color: red;
+	color: white;
+}
+
+.alert-info {
+	margin: -43.89% auto -20px auto;
+	border-color: darkgreen;
+	background-color: green;
+	color: white;
+}
+
+.alert-warning_login {
+	margin: -43.89% auto -20px auto;
+	border-color: darkred;
+	background-color: red;
+	color: white;
+}

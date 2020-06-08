@@ -3,7 +3,7 @@
 <form action="/login" method="POST">
 	<div class="login">
 		<div class="app-name">
-			<h1> Matcha </h1>
+			<h2> Matcha </h2>
 		</div>
 		<div class="login-screen">
 			<div class="app-title">
@@ -25,13 +25,26 @@
 					forgot password ?
 				</a>
 				<hr />
-				<a href="/nwusrForm" id="signup_btn" style="text-align: center" class="btn btn-primary btn-large btn-block">
+				<a href="/nwusrForm/0" id="signup_btn" style="text-align: center" class="btn btn-primary btn-large btn-block">
 					Sign up
 				</a>
 		</div>
 		<div style="text-align: center;">
 			<h5 style="text-align: center; font-size: 15px; color: white; margin: 15px;">Built with:</h5>
-			<img src="../static/PythonFlaskRedis.png" style="align-self: center; max-width: 240px; display: inline-block;">
+			<img src="../static/Flask.svg.png" style="align-self: center; max-width: 240px; display: inline-block;">
 		</div>
 	</div>
 </form>
+
+{% with messages = get_flashed_messages(with_categories = true) %}
+
+	<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+
+	{% if messages %}
+		{% for category, e in messages %}
+			<div class="alert alert-{{ category }} alert-dismissible" role="alert">
+				<!-- <strong>Title</strong> --> {{ e }}
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endwith %}
