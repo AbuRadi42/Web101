@@ -104,6 +104,8 @@ def userSignUp(userName, realName, password, e_mail, gender, Sexuality):
 					hash_key,
 					e_mail,
 					active,
+					likes,
+					hates,
 					gender,
 					Sexuality
 				) VALUES (
@@ -113,6 +115,8 @@ def userSignUp(userName, realName, password, e_mail, gender, Sexuality):
 					'{}',
 					'{}',
 					0,
+					'',
+					'',
 					{},
 					'{}'
 				)

@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
+import mysql.connector as mySQL
 
-import redis
+from userAuth import db_connect, credentials
 
-from flask import session, flash
-from binascii import hexlify
-from simplecrypt import encrypt
+from flask import session, flash, redirect
+
 from validate_email import validate_email
-
-r = redis.Redis()
 
 def handleUserInfoChange(
 	POST_USERNAME,
@@ -20,67 +17,270 @@ def handleUserInfoChange(
 	Interests,
 	POST_SEXUALITY
 ):
+
 	ChangeFlag = False
 
-	uInfo = r.hgetall(session['userIdNo'])
+	cnx, cursor = db_connect(credentials)
 
-	Crnt_USERNAME = uInfo['userName']
-	Crnt_GENDER = uInfo['gender']
-	Crnt_REALNAME = uInfo['realName']
-	Crnt_E_MAIL = uInfo['e_mail']
-	# Crnt_Biography = uInfo['Biography']
-	# Crnt_Interests = uInfo['Interests']
-	Crnt_SEXUALITY = uInfo['Sexuality']
+	if (cnx and cursor):
 
-	if POST_USERNAME <> '' and POST_USERNAME <> Crnt_USERNAME:
-		# userNameChng = 1
-		# for hashName in r.keys('0*'):
-		# 	userName1 = r.hget(hashName, 'userName')
-		# 	if userName1 == POST_USERNAME:
-		# 		# flash('userName already exists')
-		# 		print "failed to change; userName already exists" 
-		# 		userNameChng = -1
-		# 		break
-		# if userNameChng > 0:
-		# 	if len(POST_USERNAME) < (5 + 1):
-		# 		print "failed to change; userName is shorter than six characters"
-		# 	else:
-		# 		r.hset(session['userIdNo'], 'userName', POST_USERNAME)
-		# 		ChangeFlag = True
-		# 		print "changed userName successfully"
-		print "userName isn't allowed to be changed yet"
+		q = """
+				SELECT *
+				FROM `users`
+				WHERE username = '{}'
+			""".format(
+				str(session['userName'])
+			)
 
-	if POST_GENDER <> Crnt_GENDER:
-		r.hset(session['userIdNo'], 'gender', POST_GENDER)
-		ChangeFlag = True
-		print "changed gender successfully"
+		try:
 
-	if POST_REALNAME <> '' and POST_REALNAME <> Crnt_REALNAME:
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			cnx.close()
+
+			if len(R) != 0:
+
+				Crnt_USERNAME = R[0][1]
+				Crnt_GENDER = R[0][8]
+				Crnt_REALNAME = R[0][2]
+				Crnt_E_MAIL = R[0][5]
+				Crnt_Biography = R[0][10]
+				Crnt_Interests = R[0][11]
+				Crnt_SEXUALITY = R[0][9]
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+	if POST_USERNAME != '' and POST_USERNAME != Crnt_USERNAME:
+
+		cnx, cursor = db_connect(credentials)
+
+		if (cnx and cursor):
+
+			q = """
+					SELECT *
+					FROM `users`
+					WHERE username = '{}'
+				""".format(
+					str(POST_USERNAME)
+				)
+
+			try:
+
+				cursor.execute(q)
+
+				R = cursor.fetchall()
+
+				if len(R) != 0:
+
+					print("failed to change; userName already exists")
+
+					cnx.close()
+
+					return redirect('/profile')
+
+				else:
+
+					if len(POST_USERNAME) < 5:
+
+						print("failed to change; userName is shorter than 5 characters")
+
+						cnx.close()
+
+						return redirect('/profile')
+
+					else:
+
+						q = """
+							UPDATE `users`
+							SET username  = '{}'
+							WHERE username = '{}'
+						""".format(
+							str(POST_USERNAME),
+							str(Crnt_USERNAME)
+						)
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+						print("changed userName successfully")
+
+						ChangeFlag = True
+
+						cnx.close()
+
+						Crnt_USERNAME = POST_USERNAME
+
+						session['userName'] = Crnt_USERNAME
+
+						return redirect('/profile')
+
+			except mySQL.Error as e:
+
+				print(q)
+
+				print(e)
+
+				cnx.close()
+
+				return redirect('/profile')
+
+	if POST_GENDER != Crnt_GENDER:
+
+		cnx, cursor = db_connect(credentials)
+
+		if (cnx and cursor):
+
+			q = """
+					UPDATE `users`
+					SET gender  = '{}'
+					WHERE username = '{}'
+				""".format(
+					str(POST_GENDER),
+					str(Crnt_USERNAME)
+				)
+
+			try:
+
+				cursor.execute(q)
+
+				cnx.commit()
+
+				print("changed gender successfully")
+
+				ChangeFlag = True
+
+				cnx.close()
+
+				return redirect('/profile')
+
+			except mySQL.Error as e:
+
+				print(q)
+
+				print(e)
+
+				cnx.close()
+
+				return redirect('/profile')
+
+	if POST_REALNAME != '' and POST_REALNAME != Crnt_REALNAME:
+
 		testName = POST_REALNAME.split()
+
 		if len(testName) < 2:
-			# flash('realName format: Name Surname')
-			print "failed to change; Name & Surname are required"
-		else:
-			r.hset(session['userIdNo'], 'realName', POST_REALNAME)
-			ChangeFlag = True
-			print "changed realName successfully"
 
-	if POST_E_MAIL <> '' and POST_E_MAIL <> Crnt_E_MAIL:
+			print("failed to change; Name & Surname are required")
+
+			return redirect('/profile')
+
+		else:
+
+			cnx, cursor = db_connect(credentials)
+
+			if (cnx and cursor):
+
+				q = """
+						UPDATE `users`
+						SET realName  = '{}'
+						WHERE username = '{}'
+					""".format(
+						str(POST_REALNAME),
+						str(Crnt_USERNAME)
+					)
+
+				try:
+
+					cursor.execute(q)
+
+					cnx.commit()
+
+					print("changed gender successfully")
+
+					ChangeFlag = True
+
+					cnx.close()
+
+					return redirect('/profile')
+
+				except mySQL.Error as e:
+
+					print(q)
+
+					print(e)
+
+					cnx.close()
+
+					return redirect('/profile')
+
+	if POST_E_MAIL != '' and POST_E_MAIL != Crnt_E_MAIL:
+
 		if not validate_email(POST_E_MAIL):
-			print "failed to change; email isn't valid"
-		else:
-			r.hset(session['userIdNo'], 'e_mail', POST_E_MAIL)
-			ChangeFlag = True
-			print "changed e_mail successfully"
 
-	if POST_PASSWORD == '' and POST_CONFIRM <> '':
-		print "failed to change password; unconfirmed password"
-	if POST_PASSWORD <> '' and POST_CONFIRM == '':
-		print "failed to change password; unconfirmed password"
-	if POST_PASSWORD <> '' and POST_CONFIRM <> '':
-		if POST_PASSWORD <> POST_CONFIRM:
-			flash('unconfirmed password!')
-			print "failed to change password; unconfirmed password"
+			print("failed to change; email isn't valid")
+
+			return redirect('/profile')
+
+		else:
+
+			cnx, cursor = db_connect(credentials)
+
+			if (cnx and cursor):
+
+				q = """
+						UPDATE `users`
+						SET e_mail  = '{}'
+						WHERE username = '{}'
+					""".format(
+						str(POST_E_MAIL),
+						str(Crnt_USERNAME)
+					)
+
+				try:
+
+					cursor.execute(q)
+
+					cnx.commit()
+
+					print("changed e_mail successfully")
+
+					ChangeFlag = True
+
+					cnx.close()
+
+					return redirect('/profile')
+
+				except mySQL.Error as e:
+
+					print(q)
+
+					print(e)
+
+					cnx.close()
+
+					return redirect('/profile')
+
+	if POST_PASSWORD == '' and POST_CONFIRM != '':
+
+		print("failed to change password; unconfirmed password")
+
+	if POST_PASSWORD != '' and POST_CONFIRM == '':
+
+		print("failed to change password; unconfirmed password")
+
+	if POST_PASSWORD != '' and POST_CONFIRM != '':
+
+		if POST_PASSWORD != POST_CONFIRM:
+
+			print("failed to change password; unconfirmed password")
 		else:
 			# password check
 			passWordChng = 1
@@ -96,61 +296,238 @@ def handleUserInfoChange(
 						lowerCFlag = True
 				elif i.isdigit():
 					numberFlag = True
+
 			if upperCFlag is False:
-				# flash('your password needs to have at least on capital latter')
-				print "failed to change password; password missing capital latter(s)"
+
+				print("failed to change password; password missing capital latter(s)")
+
 			if lowerCFlag is False:
-				# flash('your password needs to have at least on small latter')
-				print "failed to change password; password missing small latter(s)"
+
+				print("failed to change password; password missing small latter(s)")
+
 			if numberFlag is False:
-				# flash('your password needs to have at least on number')
-				print "failed to change password; password missing number(s)"
+
+				print("failed to change password; password missing number(s)")
+
 			if upperCFlag is False or lowerCFlag is False or numberFlag is False:
+
 				passWordChng = -1
+
 			if len(POST_PASSWORD) < 10:
-				print "failed to change password; password is too short"
+
+				print("failed to change password; password is too short")
+
 				passWordChng = -1
+
 			if passWordChng > 0:
-				encrypted = hexlify(encrypt(Crnt_USERNAME[::-1], POST_PASSWORD))
-				r.hset(session['userIdNo'], 'password', encrypted)
+
+				cnx, cursor = db_connect(credentials)
+
+				if (cnx and cursor):
+
+					q = """
+							UPDATE `users`
+							SET password  = '{}'
+							WHERE username = '{}'
+						""".format(
+							str(POST_PASSWORD),
+							str(Crnt_USERNAME)
+						)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+						print("changed password successfully")
+
+						ChangeFlag = True
+
+						cnx.close()
+
+					except mySQL.Error as e:
+
+						print(q)
+
+						print(e)
+
+						cnx.close()
+
+		return redirect('/profile')
+
+	if Biography != '':
+
+		cnx, cursor = db_connect(credentials)
+
+		if (cnx and cursor):
+
+			q = """
+					UPDATE `users`
+					SET Biography  = '{}'
+					WHERE username = '{}'
+				""".format(
+					str(Biography),
+					str(Crnt_USERNAME)
+				)
+
+			try:
+
+				cursor.execute(q)
+
+				cnx.commit()
+
+				print("changed Biography successfully")
+
 				ChangeFlag = True
-				print "changed password successfully"
 
-	if Biography <> '':
-		r.hset(session['userIdNo'], 'Biography', Biography)
-		ChangeFlag = True
-		print "changed Biography successfully"
+				cnx.close()
 
-	if Interests <> '':
-		r.hset(session['userIdNo'], 'Interests', Interests)
-		ChangeFlag = True
-		print "changed Interests successfully"
+			except mySQL.Error as e:
 
-	if POST_SEXUALITY <> Crnt_SEXUALITY:
-		r.hset(session['userIdNo'], 'Sexuality', POST_SEXUALITY)
-		ChangeFlag = True
-		print "changed Sexuality successfully"
+				print(q)
+
+				print(e)
+
+				cnx.close()
+
+		return redirect('/profile')
+
+	if Interests != '':
+
+		cnx, cursor = db_connect(credentials)
+
+		if (cnx and cursor):
+
+			q = """
+					UPDATE `users`
+					SET Interests  = '{}'
+					WHERE username = '{}'
+				""".format(
+					str(Interests),
+					str(Crnt_USERNAME)
+				)
+
+			try:
+
+				cursor.execute(q)
+
+				cnx.commit()
+
+				print("changed Interests successfully")
+
+				ChangeFlag = True
+
+				cnx.close()
+
+			except mySQL.Error as e:
+
+				print(q)
+
+				print(e)
+
+				cnx.close()
+
+		return redirect('/profile')
+
+	if POST_SEXUALITY != Crnt_SEXUALITY:
+
+		cnx, cursor = db_connect(credentials)
+
+		if (cnx and cursor):
+
+			q = """
+					UPDATE `users`
+					SET Sexuality  = '{}'
+					WHERE username = '{}'
+				""".format(
+					str(POST_SEXUALITY),
+					str(Crnt_USERNAME)
+				)
+
+			try:
+
+				cursor.execute(q)
+
+				cnx.commit()
+
+				print("changed Sexuality successfully")
+
+				ChangeFlag = True
+
+				cnx.close()
+
+			except mySQL.Error as e:
+
+				print(q)
+
+				print(e)
+
+				cnx.close()
+
+		return redirect('/profile')
 
 	if ChangeFlag is False:
-		print "failed to change; nothing to change"
+
+		print("failed to change; nothing to change")
+
+		return redirect('/profile')
 
 def showBlocked():
-	hates = r.hget(session['userIdNo'], 'hates')
-	if hates is None:
-		return ''
-	hates = hates.split('_+_')
 
-	rstr = ''
-	index = 1
-	while index < len(hates):
-		line = hates[index].split('_Y_')
-		rstr += ''.join((
-			'<h5 class="blockedList">',
-				u'•'
-				+ ' [<a href="/unblockUserNo%s">unBlock</a>] ' % line[0]
-				+ r.hget(line[0], 'realName')
-				+ (', ' + line[1] if line[1] <> '#NoReason' else ''),
-			'</h5>'
-		))
-		index += 1
-	return rstr
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT *
+				FROM `hates`
+				WHERE username == '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			hatedList = []
+
+			if len(R) != 0:
+
+				hatedList = [i[2] for i in R]
+
+			cnx.close()
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+	if len(hatedList) is 0:
+
+		return ''
+
+	hatedList = hatedList.split(',')
+
+	rStr = ''
+
+	# index = 1
+	# while index < len(hates):
+	# 	line = hates[index].split('_Y_')
+	# 	rStr += ''.join((
+	# 		'<h5 class="blockedList">',
+	# 			u'•'
+	# 			+ ' [<a href="/unblockUserNo%s">unBlock</a>] ' % line[0]
+	# 			+ r.hget(line[0], 'realName')
+	# 			+ (', ' + line[1] if line[1] != '#NoReason' else ''),
+	# 		'</h5>'
+	# 	))
+	# 	index += 1
+
+	return rStr

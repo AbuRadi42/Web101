@@ -1,29 +1,94 @@
-# -*- coding: utf-8 -*-
+import mysql.connector as mySQL
 
-import redis
+from userAuth import db_connect, credentials
+from mysql.connector import errorcode
 
-from flask import session
-
-r = redis.Redis()
+from flask import session, redirect
 
 # ---
+
 def Home():
-	userPics = r.hmget(session['userIdNo'], 'pic1', 'pic2', 'pic3', 'pic4', 'pic5')
-	NoBs = 0
-	for i in userPics : NoBs += (1 if i is not None else 0)
-	if (NoBs > 0):
-		return '<a href="/">Home</a>'
-	else:
-		return '<a href="#" class="noPicsHome">Home</a>'
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT *
+				FROM `users`
+				WHERE username = '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			cnx.close()
+
+			if len(R) != 0:
+
+				userPic = R[0][6]
+
+				if R[0][6] is None:
+					return '<a href="#" class="noPicsHome">Home</a>'
+				else:
+					return '<a href="/">Home</a>'
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+	return redirect('/')
+
 # ---
 
 def grabUsers():
-	users = []
-	for key in r.scan_iter("0*"):
-		if len(key) is 4:
-			users.append(key)
-	users.remove(session['userIdNo'])
-	return users
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT *
+				FROM `users`
+				WHERE username != '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			cnx.close()
+
+			if len(R) != 0:
+
+				return R
+
+			else:
+
+				return []
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+	return -1
 
 def getSexuality(gender, Sexuality):
 	if Sexuality == '1':
@@ -36,44 +101,42 @@ def getSexuality(gender, Sexuality):
 		else:
 			return u'⚢'
 
-def moreUserInfo(userId):
-	uInfo = r.hgetall(userId)
-	rstr = uInfo['Connection'] + ('&#13;' * 2)
-	rstr += 'Location: ' + uInfo['Location'] + '&#13;'
-	rstr += 'Gender: ' + (u'♂' if uInfo['gender'] == '1' else u'♀') + ', '
-	rstr += 'Sexuality: ' + getSexuality(uInfo['gender'], uInfo['Sexuality']) + '&#13;'
-	rstr += ('Interests: ' + uInfo['Interests'] + '&#13;') if uInfo.get('Interests') else ''
-	rstr += ('Biography: ' + uInfo['Biography'] + '&#13;') if uInfo.get('Biography') else ''
-	return rstr
+def moreUserInfo(userX):
+	rStr = str(userX[16]) + ('&#13;' * 2)
+	rStr += 'Location: ' + str(userX[12]) + '&#13;'
+	rStr += 'Gender: ' + (u'♂' if userX[8] == '1' else u'♀') + ', '
+	rStr += 'Sexuality: ' + getSexuality(userX[8], userX[9]) + '&#13;'
+	rStr += ('Interests: ' + userX[11] + '&#13;') if userX[11] else ''
+	rStr += ('Biography: ' + userX[10] + '&#13;') if userX[10] else ''
+	return rStr
 
 #---
-def xPicsIn1Card(userId):
-	userPics = r.hmget(userId, 'pic1', 'pic2', 'pic3', 'pic4', 'pic5')
 
-	# grabing the userPics to turn them into htmlImgs & counting the NoBs
+def cardPic(pic):
+
 	htmlImgs = ''
 	NoBs = 0
-	for i in userPics:
-		if i is not None and i <> '':
-			htmlImgs += ''.join((
-				# '<img class="img_avatar mySlides" src="data:image/png;base64, %s"' % (
-				# 	r.hget(userId, 'pic1')
-				# )
-				# + 'style="padding: 2.5px; width: 100%%">'
-				'<div style="%s %s %s %s %s %s %s %s %s %s"></div>' % (
-					'background-color: #cccccc;',
-					'background-image: url(\'data:image/png;base64, %s\');' % r.hget(userId, 'pic1'),
-					'background-repeat: no-repeat;',
-					'background-position: center;',
-					'background-size: contain;',
-					'background-size: cover;',
-					'height: 180px;',
-					'width: 100%;',
-					'border-radius: 3px;',
-					'margin-top: -.0px;'
-				)
-			))
-			NoBs += 1
+
+	if pic is not None:
+		htmlImgs += ''.join((
+			# '<img class="img_avatar mySlides" src="data:image/png;base64, %s"' % (
+			# 	r.hget(userId, 'pic1')
+			# )
+			# + 'style="padding: 2.5px; width: 100%%">'
+			'<div style="%s %s %s %s %s %s %s %s %s %s"></div>' % (
+				'background-color: #cccccc;',
+				'background-image: url(\'data:image/png;base64, %s\');' % pic,
+				'background-repeat: no-repeat;',
+				'background-position: center;',
+				'background-size: contain;',
+				'background-size: cover;',
+				'height: 180px;',
+				'width: 100%;',
+				'border-radius: 3px;',
+				'margin-top: -.0px;'
+			)
+		))
+		NoBs += 1
 
 	if NoBs > 1:
 		htmlBdgs = ''
@@ -107,111 +170,186 @@ def xPicsIn1Card(userId):
 		))
 
 	return None if NoBs is 0 else htmlPics
-#---
-
-def TheyLikeThem(x, y):
-	likes = r.hget(x, 'likes')
-	if likes is None:
-		likes = ''
-	likesArray = likes.split()
-	for i in likesArray:
-		if i == y:
-			return True
-	# else ;
-	return False
 
 #---
+
+# def TheyLikeThem(x, y):
+
+# 	cnx, cursor = db_connect(credentials)
+
+# 	if (cnx and cursor):
+
+# 		q = """
+# 				SELECT *
+# 				FROM `users`
+# 				WHERE username = '{}'
+# 			""".format(
+# 				str(session['userName'])
+# 			)
+
+# 		try:
+
+# 			cursor.execute(q)
+
+# 			R = cursor.fetchall()
+
+# 			cnx.close()
+
+# 			if len(R) != 0:
+
+# 				if R[13] is None:
+
+# 					likes = ''
+
+# 				likesArray = likes.split(',')
+
+# 				for i in likesArray:
+
+# 					if i == y:
+
+# 						return True
+
+# 				return False
+
+# 		except mySQL.Error as e:
+
+# 			print(e)
+
+# 			cnx.close()
+
+# 			return redirect('/')
+
+#---
+
 def common_interest(x, y):
 	if TheyLikeThem(x, y) and TheyLikeThem(y, x):
 		return '<i class="far fa-comment-dots"></i>' # <- &#xf4ad;
 	else:
 		return ''
+
 #---
 
 def showUsers(usersToLeave):
+
 	users = grabUsers()
 
-	for i in users : users.remove(i) if xPicsIn1Card(i) is None else 0
+	for i in users : users.remove(i) if i[6] is None else 0
 
-	for i in users : users.remove(i) if r.hget(i, 'active') == '0' else 0
+	for i in users : users.remove(i) if i[7] is False else 0
 
-	if usersToLeave is not None and usersToLeave <> []:
+	if usersToLeave is not None and usersToLeave != []:
+
 		for i in usersToLeave : users.remove(i) if i in users else 0
 
-	# pulling out the C mode since other method didn't work to do this:
-	hates = r.hget(session['userIdNo'], 'hates')
-	if hates is None:
-		hates = ''
-	hates = hates.split('_+_')
-	hates.remove('')
-	j = 0
-	while j < len(hates):
-		hates[j] = hates[j].split('_Y_')[0]
-		j += 1
-	k = 0
-	while k < len(hates):
-		if hates[k] in users:
-			users.remove(
-				hates[k]
-			)
-		k += 1
-	# removing the users who blocked you on their side from [dashBoard]
-	l = 0
-	while l < len(users):
-		uhates = r.hget(users[l], 'hates')
-		if uhates is None:
-			l += 1
-			continue
-		uhates = uhates.split('_+_')
-		uhates.remove('')
-		m = 0
-		while m < len(uhates):
-			uhates[m] = uhates[m].split('_Y_')[0]
-			m += 1
-		n = 0
-		while n < len(uhates):
-			if session['userIdNo'] in uhates:
-				users.remove(users[l])
-				break
-			n += 1
-		l += 1
+	# removing blocked & blocking users (another approach):
+
+	# cnx, cursor = db_connect(credentials)
+
+	# if (cnx and cursor):
+
+	# 	q = """
+	# 			SELECT *
+	# 			FROM `hates`
+	# 			WHERE username == '{}'
+	# 		""".format(
+	# 			str(session['userName'])
+	# 		)
+
+	# 	try:
+
+	# 		cursor.execute(q)
+
+	# 		R = cursor.fetchall()
+
+	# 		if len(R) != 0:
+
+	# 			hatedList = [i[2] for i in R]
+
+	# 			for j in users : users.remove(i) if i[1] in hatedList else 0
+
+	# 		cnx.close()
+
+	# 	except mySQL.Error as e:
+
+	# 		print(e)
+
+	# 		cnx.close()
+
+	# 		return redirect('/')
+
+	# cnx, cursor = db_connect(credentials)
+
+	# if (cnx and cursor):
+
+	# 	q = """
+	# 			SELECT *
+	# 			FROM `hates`
+	# 			WHERE hatedUser == '{}'
+	# 		""".format(
+	# 			str(session['userName'])
+	# 		)
+
+	# 	try:
+
+	# 		cursor.execute(q)
+
+	# 		R = cursor.fetchall()
+
+	# 		if len(R) != 0:
+
+	# 			hatedList = [i[1] for i in R]
+
+	# 			for j in users : users.remove(i) if i[1] in hatedList else 0
+
+	# 		cnx.close()
+
+	# 	except mySQL.Error as e:
+
+	# 		print(e)
+
+	# 		cnx.close()
+
+	# 		return redirect('/')
+
+	# ---
 
 	Cards = '<div class="dashRow">'
+
 	C = 0
 	while C < len(users):
-		# ---
-		uInfo = r.hgetall(users[C])
-		# ---
+
 		if C % 4 is 0:
 			Cards += '</div><div class="dashRow">'
 		# ---
 		Cards += ''.join((
 			'<div class="column">',
 				'<div class="card" title="%s">' % moreUserInfo(users[C]),
-					xPicsIn1Card(users[C]),
+					cardPic(users[C][6]),
 					'<div class="blockBtn">',
-						'<a href="/blockUserNo%s" class="blockBtn">' % users[C],
+						'<a href="/blockUserNo%s" class="blockBtn">' % str(users[C][0]),
 							u'✘',
 						'</a>',
 					'</div>',
 					'<div class="likeBtn">',
 						'<a href="/%sLikesNo%s" class="likeBtn" style="color: %s">' % (
-							session['userIdNo'],
-							users[C],
-							'indianred' if TheyLikeThem(session['userIdNo'], users[C]) else 'lightgray'
+							session['userName'],
+							str(users[C][0]),
+							'indianred'
+							# 'indianred' if TheyLikeThem(session['userIdNo'], (users[C][0])) else 'lightgray'
 						),
 							u'♥',
 						'</a>',
 					'</div>',
-					'<h2 class="fameR">%s</h2>' % uInfo['fameR'],
+					'<h2 class="fameR">%s</h2>' % str(users[C][15]),
 					'<div class="container">',
 						'<h4><b>%s <a href="%schatingTo%s" class="chatBtn">%s</a></b></h4>' % (
-							uInfo['realName'],
-							session['userIdNo'],
-							users[C],
-							common_interest(session['userIdNo'], users[C])
+							users[C][2],
+							session['userName'],
+							str(users[C][0]),
+							''
+							# common_interest(session['userIdNo'], (users[C][0]))
 						),
-						'<p>%s</p>' % uInfo['Biography'] if uInfo['Biography'] is not None else '_',
+						'<p>%s</p>' % users[C][10] if users[C][10] is not None else '_',
 					'</div>',
 				'</div>',
 			'</div>'
@@ -227,29 +365,30 @@ def showUsers(usersToLeave):
 				'<!-- Nothing.. -->',
 			'</div>'
 		))
+
 		R -= 1
 
 	return Cards
 
-#---
+# #---
 
-def unlike(x, y, likesArray):
-	likesArray.remove(y)
+# def unlike(x, y, likesArray):
+# 	likesArray.remove(y)
 
-	likes = ''
-	for i in likesArray:
-		likes += ' %s' % i
+# 	likes = ''
+# 	for i in likesArray:
+# 		likes += ' %s' % i
 
-	r.hset(session['userIdNo'], 'likes', likes)
-	#---
-	r.hset(
-		y,
-		'fameR',
-		int(
-			r.hget(
-				y,
-				'fameR'
-			)
-		) - 1
-	)
-	#---
+# 	r.hset(session['userIdNo'], 'likes', likes)
+# 	#---
+# 	r.hset(
+# 		y,
+# 		'fameR',
+# 		int(
+# 			r.hget(
+# 				y,
+# 				'fameR'
+# 			)
+# 		) - 1
+# 	)
+# 	#---

@@ -10,25 +10,20 @@ from time import time, ctime
 
 # <- assigning default credentials
 
-credentials	= {}
-
-credentials['host']	= '127.0.0.1'
-credentials['user']	= 'root'
-credentials['pass']	= 'password'
-credentials['DB']	= 'Matcha'
-
 sys.path.insert(0, './incs')
 
-from userAuth import db_connect, userSignUp, userSignIn, goneSince
+from userAuth import db_connect, credentials, userSignUp, userSignIn, goneSince
 
 # from simplecrypt import encrypt, decrypt
 # from binascii import hexlify, unhexlify
 
-# from Retrieve import sendEmail
+from Retrieve import sendEmail
+from displayUsers import Home, showUsers
+from Notifs import Notifs, notifList
+
 # from displayUsers import Home, showUsers, unlike
-# from handleChange import handleUserInfoChange, showBlocked
+from handleChange import handleUserInfoChange, showBlocked
 # from ShowMsgsBtwn import MsgsBtwn
-# from Notifs import Notifs, notifList
 # from Search import unsearchedUsers
 
 
@@ -49,10 +44,10 @@ def index():
 		)
 	else:
 		return render_template(
-			'dashBoard.html'
-			# Home = Home(),
-			# Notifs = Notifs(),
-			# cards = showUsers([])
+			'dashBoard.html',
+			Home = Home(),
+			Notifs = Notifs(),
+			cards = showUsers([])
 		)
 
 @WebApp.route('/login', methods = ['POST'])
@@ -82,167 +77,325 @@ def logout():
 
 #--- Password Retrieving Mechanism ;
 
-# @WebApp.route('/passRetrieveForm')
+@WebApp.route('/passRetrieveForm')
 
-# def passRetrieveFrom():
-# 	return render_template('Retrieve.html')
+def passRetrieveFrom():
+	return render_template('Retrieve.html')
 
-# @WebApp.route('/passRetrieve', methods = ['POST'])
+@WebApp.route('/passRetrieve', methods = ['POST'])
 
-# def passRetrieve():
-# 	POST_USERNAME = str(request.form['username'])
-# 	if POST_USERNAME == "":
-# 		print("\nfailed to get the userName; type it in the form\n")
-# 	else:
-# 		for hashName in r.keys("0*"):
-# 			userName = r.hget(hashName, "userName")
-# 			if userName == POST_USERNAME:
-# 				break
-# 		if userName <> POST_USERNAME:
-# 			print("\nuserName \'\033[1m%s\033[0m\'" % POST_USERNAME, end = " ")
-# 			print("isn't registered\n")
-# 			flash('userName isn\'t registered')
-# 			return index()
-# 		else:
-# 			e_mail = r.hget(hashName, 'e_mail')
-# 			sendEmail(hashName, r.hget(hashName, "realName"), e_mail)
-# 			print("\nan email was sent to %s\n" % e_mail)
-# 	return index()
+def passRetrieve():
+	POST_USERNAME = str(request.form['username'])
 
-# @WebApp.route('/newPasswordForm_<y>')
+	if POST_USERNAME == "":
+		print("\nfailed to get the userName; type it in the form\n")
+	else:
+		cnx, cursor = db_connect(credentials)
 
-# def newPasswordForm(y):
-# 	return render_template(
-# 		'newPasswordForm.html',
-# 		y = y,
-# 		realName = r.hget(y, "raelName")
-# 	)
+		if (cnx and cursor):
 
-# @WebApp.route('/newPasswordSet_<y>', methods = ['POST'])
+			q = """
+					SELECT *
+					FROM `users`
+					WHERE username = '{}'
+				""".format(
+					str(POST_USERNAME)
+				)
 
-# def newPasswordSet(y):
-# 	POST_PASSWORD = str(request.form['password'])
-# 	POST_CONFRIM = str(request.form['confirm'])
-# 	if POST_PASSWORD == "" or POST_CONFRIM == "":
-# 		print("\nfailed to get the password; type it in the form\n")
-# 	else:
-# 		if POST_PASSWORD <> POST_CONFRIM:
-# 			print("failed to change the password; unconfirmed password")
-# 			return index()
-# 		else:
-# 			# password check
-# 			password = POST_PASSWORD
+			try:
 
-# 			upperCFlag = False
-# 			lowerCFlag = False
-# 			numberFlag = False
-# 			for i in password:
-# 				if i.isalpha():
-# 					if i.isupper():
-# 						upperCFlag = True
-# 					elif i.islower():
-# 						lowerCFlag = True
-# 				elif i.isdigit():
-# 					numberFlag = True
-# 			if upperCFlag is False:
-# 				# flash('your password needs to have at least on capital latter')
-# 				print("failed to sign up; password missing capital latter(s)")
-# 			if lowerCFlag is False:
-# 				# flash('your password needs to have at least on small latter')
-# 				print("failed to sign up; password missing small latter(s)")
-# 			if numberFlag is False:
-# 				# flash('your password needs to have at least on number')
-# 				print("failed to sign up; password missing number(s)")
-# 			if upperCFlag is False or lowerCFlag is False or numberFlag is False:
-# 				return index()
-# 			if len(password) < 8:
-# 				print("failed to sign up; password is too short")
-# 				return index()
-# 			encrypted = hexlify(encrypt(r.hget(y, 'userName')[::-1], password))
-# 			r.hset(y, 'password', encrypted)
-# 			print("changed password successfully")
-# 	return index()
+				cursor.execute(q)
 
-# @WebApp.route('/passResetFrom')
+				R = cursor.fetchall()
 
-# def passResetFrom():
-# 	return render_template('passResetFrom.html')
+				cnx.close()
 
-# @WebApp.route('/passReset', methods = ['POST'])
+				if len(R) != 0:
 
-# def passReset():
-# 	return index()
+					sendEmail(str(R[0][0]), str(R[0][1 + 1]), str(R[0][5]))
 
-# #--- User Info Changing Mechanism ;
+					print("\nan email was sent to %s\n" % str(R[0][5]))
 
-# @WebApp.route('/profile')
+					return index()
 
-# def userProfile():
-# 	userInfo = r.hgetall(session['userIdNo'])
-# 	return render_template(
-# 		'userProfile.html',
-# 		Home = Home(),
-# 		Notifs = Notifs(),
-# 		userName = userInfo['userName'],
-# 		realName = userInfo['realName'],
-# 		e_mail = userInfo['e_mail'],
-# 		pYDL = showBlocked()
-# 	)
+			except mySQL.Error as e:
 
-# @WebApp.route('/infoChange', methods = ['GET', 'POST'])
+				print(e)
 
-# def infoChange():
-# 	POST_USERNAME = str(request.form['username'])
-# 	# ---
-# 	if request.method == 'POST':
-# 		gender = request.form.getlist('gender')
-# 		if len(gender) is 1:
-# 			POST_GENDER = '0'
-# 		else:
-# 			POST_GENDER = '1'
-# 	# ---
-# 	POST_REALNAME = str(request.form['realname'])
-# 	# ---
-# 	POST_E_MAIL = str(request.form['e_mail'])
-# 	# ---
-# 	POST_PASSWORD = str(request.form['password'])
-# 	POST_CONFIRM = str(request.form['confirm'])
-# 	# ---
-# 	Biography = str(request.form['biography'])
-# 	Interests = str(request.form['interests'])
-# 	# ---
-# 	POST_SEXUALITY = str(request.form['sexuality'])
-# 	# ---
-# 	handleUserInfoChange(
-# 		POST_USERNAME,
-# 		POST_GENDER,
-# 		POST_REALNAME,
-# 		POST_E_MAIL,
-# 		POST_PASSWORD,
-# 		POST_CONFIRM,
-# 		Biography,
-# 		Interests,
-# 		POST_SEXUALITY
-# 	)
+				cnx.close()
 
-# 	if request.method == 'POST':
-# 		if 'file' not in request.files:
-# 			flash('No picture chosen')
-# 			print('No picture chosen')
-# 		else:
-# 			file = request.files['file']
-# 			if file.filename == '':
-# 				flash('No file selected for uploading')
-# 				print('No file selected for uploading')
-# 			elif file and allowed_file(file.filename):
-# 				inputStr = base64.b64encode(file.read())
-# 				r.hset(session['userIdNo'], 'pic1', inputStr)
-# 				flash('Picture successfully uploaded')
-# 				print('Picture successfully uploaded')
-# 			else:
-# 				flash('Not a valied format')
-# 				print('Not a valied format')
-# 	return index()
+				return redirect('/passRetrieveForm')
+
+		else:
+
+			return redirect('/passRetrieveForm')
+
+	return index()
+
+@WebApp.route('/newPasswordForm_<y>')
+
+def newPasswordForm(y):
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT *
+				FROM `users`
+				WHERE username = '{}'
+			""".format(
+				str(POST_USERNAME)
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			cnx.close()
+
+			if len(R) != 0:
+
+				return render_template(
+					'newPasswordForm.html',
+					y = y,
+					realName = str(R[0][1 + 1])
+				)
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/passRetrieveForm')
+
+@WebApp.route('/newPasswordSet_<y>', methods = ['POST'])
+
+def newPasswordSet(y):
+	POST_PASSWORD = str(request.form['password'])
+	POST_CONFRIM = str(request.form['confirm'])
+
+	if POST_PASSWORD == "" or POST_CONFRIM == "":
+
+		print("\nfailed to get the password; type it in the form\n")
+
+	else:
+
+		if POST_PASSWORD != POST_CONFRIM:
+
+			print("failed to change the password; unconfirmed password")
+
+			return index()
+
+		else:
+			# password check
+			password = POST_PASSWORD
+
+			upperCFlag = False
+			lowerCFlag = False
+			numberFlag = False
+
+			for i in password:
+				if i.isalpha():
+					if i.isupper():
+						upperCFlag = True
+					elif i.islower():
+						lowerCFlag = True
+				elif i.isdigit():
+					numberFlag = True
+			if upperCFlag is False:
+				errMsg = "password must include capital latter/s"
+
+				print("failed to sign up; password missing capital latter(s)")
+				# flash(errMsg, "warning")
+				return render_template('nwusrForm.html', e = errMsg)
+
+			if lowerCFlag is False:
+				errMsg = "password must include small latter/s"
+
+				print("failed to sign up; password missing small latter(s)")
+				# flash(errMsg, "warning")
+				return render_template('nwusrForm.html', e = errMsg)
+
+			if numberFlag is False:
+				errMsg = "password must include number/s"
+
+				print("failed to sign up; password missing number(s)")
+				# flash(errMsg, "warning")
+				return render_template('nwusrForm.html', e = errMsg)
+
+			if len(password) < 8:
+				errMsg = "password is too short"
+
+				print("failed to sign up; password is too short")
+				# flash(errMsg, "warning")
+				return render_template('nwusrForm.html', e = errMsg)
+
+		return index()
+
+@WebApp.route('/passResetFrom')
+
+def passResetFrom():
+	return render_template('passResetFrom.html')
+
+@WebApp.route('/passReset', methods = ['POST'])
+
+def passReset():
+	return index()
+
+#--- User Info Changing Mechanism ;
+
+@WebApp.route('/profile')
+
+def userProfile():
+
+	if not session.get('loggedIn'):
+		return render_template(
+			'loginForm.html'
+		)
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT *
+				FROM `users`
+				WHERE username = '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			cnx.close()
+
+			if len(R) != 0:
+
+				return render_template(
+					'userProfile.html',
+					Home = Home(),
+					Notifs = Notifs(),
+					userName = R[0][1],
+					gender = 0,
+					realName = R[0][1 + 1],
+					e_mail = R[0][5],
+					pYDL = showBlocked()
+				)
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return index()
+
+	else:
+
+		return index()
+
+@WebApp.route('/infoChange', methods = ['GET', 'POST'])
+
+def infoChange():
+	POST_USERNAME = str(request.form['username'])
+	# ---
+	if request.method == 'POST':
+		gender = request.form.getlist('gender')
+		if len(gender) is 1:
+			POST_GENDER = '0'
+		else:
+			POST_GENDER = '1'
+	# ---
+	POST_REALNAME = str(request.form['realname'])
+	# ---
+	POST_E_MAIL = str(request.form['e_mail'])
+	# ---
+	POST_PASSWORD = str(request.form['password'])
+	POST_CONFIRM = str(request.form['confirm'])
+	# ---
+	Biography = str(request.form['biography'])
+	Interests = str(request.form['interests'])
+	# ---
+	POST_SEXUALITY = str(request.form['sexuality'])
+	# ---
+	handleUserInfoChange(
+		POST_USERNAME,
+		POST_GENDER,
+		POST_REALNAME,
+		POST_E_MAIL,
+		POST_PASSWORD,
+		POST_CONFIRM,
+		Biography,
+		Interests,
+		POST_SEXUALITY
+	)
+
+	if request.method == 'POST':
+
+		if 'file' not in request.files:
+
+			print('No picture chosen')
+
+		else:
+
+			file = request.files['file']
+
+			if file.filename == '':
+
+				print('No file selected for uploading')
+
+			elif file and allowed_file(file.filename):
+
+				inputStr = base64.b64encode(file.read())
+
+				cnx, cursor = db_connect(credentials)
+
+				if (cnx and cursor):
+
+					q = """
+							UPDATE `users`
+							SET pic  = '{}'
+							WHERE username = '{}'
+						""".format(
+							str(inputStr)[1 + 1:-1],
+							str(session['userName'])
+						)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+						print('Picture successfully uploaded')
+
+						ChangeFlag = True
+
+						cnx.close()
+
+					except mySQL.Error as e:
+
+						print(q)
+
+						print(e)
+
+						cnx.close()
+
+				return index()
+
+			else:
+
+				print('Not a valied format')
+
+	return index()
 
 # @WebApp.route('/deleteUserRoute')
 
@@ -424,6 +577,10 @@ def nwusrForm(e):
 			# flash(errMsg, "warning")
 			pass
 
+		elif int(e) is 10:
+			errMsg = "userName is shorter than 5 characters"
+			flash(errMsg, "warning")
+
 	return render_template('nwusrForm.html', e = errMsg)
 
 @WebApp.route('/signup', methods = ['POST'])
@@ -449,6 +606,10 @@ def signup():
 	elif POST_USERNAME == "":
 
 		return redirect('/nwusrForm/01')
+
+	elif len(POST_USERNAME) < 5:
+
+		return redirect('/nwusrForm/10')
 
 	cnx, cursor = db_connect(credentials)
 

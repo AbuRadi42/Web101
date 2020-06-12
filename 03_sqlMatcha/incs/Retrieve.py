@@ -33,7 +33,7 @@ def sendVerificationText(e_mail, userIdNo):
 		print(response.status_code)
 		print(response.body)
 		print(response.headers)
-		print 'A verification eMail was sent to %s' % e_mail
+		print('A verification eMail was sent to %s' % e_mail)
 	except Exception as e:
 		print(e)
 
@@ -45,7 +45,7 @@ def sendEmail(userIdNo, realName, e_mail):
 	_subject = "Matcha's Account Password Retrieve"
 	_text = ''.join((
 		'<p>',
-			'Dear %s, (userIdNo: %s)' % (realName, userIdNo),
+			'Dear %s, ' % (realName),
 			'<br>',
 			'<br>',
 			'Please click <a href="%s">here</a> to retrieve your password.' % (
@@ -56,19 +56,23 @@ def sendEmail(userIdNo, realName, e_mail):
 			'Regards!',
 		'</p>'
 	))
+
 	message = Mail(
 		from_email = _from,
 		to_emails = _to,
 		subject = _subject,
 		html_content = _text
 	)
+
 	try:
 		sg = SendGridAPIClient('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')
 		response = sg.send(message)
 		print(response.status_code)
 		print(response.body)
 		print(response.headers)
-		print 'A verification eMail was sent to %s' % e_mail
+		print('A verification eMail was sent to %s' % e_mail)
+
 	except Exception as e:
 		print(e)
+
 	return None
