@@ -1,9 +1,7 @@
 import mysql.connector as mySQL
 
 from userAuth import db_connect, credentials
-
 from flask import session, flash, redirect
-
 from validate_email import validate_email
 
 def handleUserInfoChange(

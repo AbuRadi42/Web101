@@ -2,7 +2,6 @@ import mysql.connector as mySQL
 
 from userAuth import db_connect, credentials
 from mysql.connector import errorcode
-
 from flask import session, redirect
 
 # ---
@@ -102,7 +101,8 @@ def getSexuality(gender, Sexuality):
 			return u"⚢"
 
 def moreUserInfo(userX):
-	rStr = str(userX[16]) + ("&#13;" * 2)
+
+	rStr = "" # str(userX[16]) + ("&#13;" * 2)
 	rStr += "Location: " + str(userX[12]) + "&#13;"
 	rStr += "Gender: " + (u"♂" if userX[8] == "1" else u"♀") + ", "
 	rStr += "Sexuality: " + getSexuality(userX[8], userX[9]) + "&#13;"

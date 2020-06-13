@@ -1,6 +1,8 @@
-# using SendGrid's Python Library
-# https://github.com/sendgrid/sendgrid-python
+import mysql.connector as mySQL
 
+from userAuth import db_connect, credentials
+from mysql.connector import errorcode
+from flask import session, redirect
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 

@@ -21,7 +21,7 @@ from Notifs import Notifs, notifList
 
 from handleChange import handleUserInfoChange, showBlocked
 from ShowMsgsBtwn import MsgsBtwn
-# from Search import unsearchedUsers
+from Search import unsearchedUsers
 
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 
@@ -34,10 +34,11 @@ WebApp = Flask(__name__)
 @WebApp.route("/")
 
 def index():
+
 	if not session.get("loggedIn"):
-		return render_template(
-			"loginForm.html"
-		)
+
+		return render_template("loginForm.html")
+
 	else:
 		return render_template(
 			"dashBoard.html",
@@ -49,6 +50,7 @@ def index():
 @WebApp.route("/login", methods = ["POST"])
 
 def login():
+
 	POST_USERNAME = str(request.form["username"])
 	POST_PASSWORD = str(request.form["password"])
 
@@ -77,11 +79,13 @@ def logout():
 @WebApp.route("/passRetrieveForm")
 
 def passRetrieveFrom():
+
 	return render_template("Retrieve.html")
 
 @WebApp.route("/passRetrieve", methods = ["POST"])
 
 def passRetrieve():
+
 	POST_USERNAME = str(request.form["username"])
 
 	if POST_USERNAME == "":
@@ -172,6 +176,7 @@ def newPasswordForm(y):
 @WebApp.route("/newPasswordSet_<y>", methods = ["POST"])
 
 def newPasswordSet(y):
+
 	POST_PASSWORD = str(request.form["password"])
 	POST_CONFRIM = str(request.form["confirm"])
 
@@ -251,10 +256,9 @@ def passReset():
 
 def userProfile():
 
-	if not session.get("loggedIn"):
-		return render_template(
-			"loginForm.html"
-		)
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	cnx, cursor = db_connect(credentials)
 
@@ -304,6 +308,10 @@ def userProfile():
 @WebApp.route("/infoChange", methods = ["GET", "POST"])
 
 def infoChange():
+
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	POST_USERNAME = str(request.form["username"])
 	# ---
@@ -401,11 +409,19 @@ def infoChange():
 
 def deleteUserRoute():
 
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
+
 	return render_template("deleteUser.html")
 
 @WebApp.route("/deleteUser")
 
 def deleteUser():
+
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	cnx, cursor = db_connect(credentials)
 
@@ -449,6 +465,10 @@ def deleteUser():
 @WebApp.route("/<x>LikesNo<y>")
 
 def xLikesNoY(x, y):
+
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	cnx, cursor = db_connect(credentials)
 
@@ -732,6 +752,10 @@ def xLikesNoY(x, y):
 
 def blockUserNo(y):
 
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
+
 	cnx, cursor = db_connect(credentials)
 
 	if (cnx and cursor):
@@ -774,6 +798,10 @@ def blockUserNo(y):
 @WebApp.route("/<x>HatesNo<y>", methods = ["POST"])
 
 def xHatesNoY(x, y):
+
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	POST_REASON = str(request.form["why"])
 
@@ -851,6 +879,10 @@ def xHatesNoY(x, y):
 
 def unblockUserNo(y):
 
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
+
 	x = session["uId"]
 
 	cnx, cursor = db_connect(credentials)
@@ -894,6 +926,10 @@ def unblockUserNo(y):
 
 def notifListRoute():
 
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
+
 	return render_template(
 		"notifList.html",
 		Home = Home(),
@@ -904,6 +940,10 @@ def notifListRoute():
 @WebApp.route("/<x>chatingTo<y>")
 
 def xChatingToY(x, y):
+
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	return render_template(
 		"xChatingToY.html",
@@ -916,6 +956,10 @@ def xChatingToY(x, y):
 @WebApp.route("/sendMsgTo<y>", methods = ["POST"])
 
 def sendMsgToY(y):
+
+	if not session["loggedIn"]:
+
+		return render_template("loginForm.html")
 
 	POST_MESSAGE = str(request.form["yourMsg"])
 
@@ -967,6 +1011,7 @@ def sendMsgToY(y):
 @WebApp.route("/nwusrForm/<e>")
 
 def nwusrForm(e):
+
 	errMsg = ""
 
 	if e:
@@ -1004,6 +1049,7 @@ def nwusrForm(e):
 @WebApp.route("/signup", methods = ["POST"])
 
 def signup():
+
 	POST_USERNAME = str(request.form["username"])
 	POST_REALNAME = str(request.form["realname"])
 	POST_PASSWORD = str(request.form["password"])
@@ -1092,37 +1138,43 @@ def signup():
 		POST_SEXUALITY
 	)
 
-# @WebApp.route("/verify<y>")
+@WebApp.route("/verify<y>")
 
-# def verify(y):
-# 	crntStatus = r.hget(y, "active")
-# 	if crntStatus is None:
-# 		print("failed to verify; user doesn"t exist")
-# 		return index()
-# 	elif crntStatus == "1":
-# 		print("failed to verify; user is already verified")
-# 		return index()
-# 	elif crntStatus == "0":
-# 		r.hset(y, "active", 1)
-# 		print("verification of %s is successful" % y)
-# 		return index()
-# 	else:
-# 		print("failed to verify; check your Redis connection")
-# 		return index()
+def verify(y):
+
+	# crntStatus = r.hget(y, "active")
+
+	# if crntStatus is None:
+	# 	print("failed to verify; user doesn't exist")
+	# 	return index()
+	# elif crntStatus == "1":
+	# 	print("failed to verify; user is already verified")
+	# 	return index()
+	# elif crntStatus == "0":
+	# 	r.hset(y, "active", 1)
+	# 	print("verification of %s is successful" % y)
+	# 	return index()
+	# else:
+	# 	print("failed to verify; check your Redis connection")
+	# 	return index()
+
+	pass
 
 # #--- Search / Filter Mechanism ;
 
-# @WebApp.route("/search", methods = ["POST"])
+@WebApp.route("/search", methods = ["POST"])
 
-# def search():
-# 	POST_SEARCH = str(request.form["searchTxt"])
-# 	usersToLeave = unsearchedUsers(POST_SEARCH)
-# 	return render_template(
-# 		"dashBoard.html",
-# 		Home = Home(),
-# 		Notifs = Notifs(),
-# 		cards = showUsers(usersToLeave)
-# 	)
+def search():
+	POST_SEARCH = str(request.form["searchTxt"])
+
+	usersToLeave = unsearchedUsers(POST_SEARCH)
+
+	return render_template(
+		"dashBoard.html",
+		Home = Home(),
+		Notifs = Notifs(),
+		cards = showUsers(usersToLeave)
+	)
 
 #--- MainFn
 

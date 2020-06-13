@@ -3,6 +3,7 @@ import basehash
 
 from mysql.connector import errorcode
 from flask import Flask, flash, redirect, render_template, session
+from subprocess import getoutput
 
 # from Retrieve import sendVerificationText
 
@@ -195,11 +196,24 @@ def userSignIn(userName, password):
 
 				if R[0][7]:
 
-					cnx.close()
-
 					session["loggedIn"] = True
 					session["userName"] = R[0][1]
 					session["uId"] = R[0][0]
+
+					q = """
+							UPDATE `users`
+							SET Location  = "{}"
+							WHERE uId = {}
+						""".format(
+							getoutput("curl ipinfo.io/city").split('\n')[-1],
+							session["uId"]
+						)
+
+					cursor.execute(q)
+
+					cnx.commit()
+
+					cnx.close()
 
 					return redirect("/")
 

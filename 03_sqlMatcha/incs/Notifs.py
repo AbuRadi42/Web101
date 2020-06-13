@@ -62,6 +62,7 @@ def notifList():
 				SELECT content, seen
 				FROM `notifs`
 				WHERE uId = {}
+				ORDER BY timedate DESC
 			""".format(
 				str(session["uId"])
 			)
@@ -118,7 +119,7 @@ def notifList():
 
 						rStr += "".join((
 							"<div style=\"color: %s;\">" % "#303030",
-								"<h5 style=\"font-size: 13.5px\">",
+								"<h5 style=\"font-size: 13.5px; Margin-left: 15px;\">",
 									u" • "
 									+ "%s, " % j[0],
 								"</h5>",

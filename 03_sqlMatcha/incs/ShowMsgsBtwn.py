@@ -14,8 +14,14 @@ def MsgsBtwn(x, y):
 		q = """
 				SELECT *
 				FROM `msgs`
+				WHERE (`from` = {} AND `to` = {}) OR (`from` = {} AND `to` = {})
 				ORDER BY timedate DESC
-			"""
+			""".format(
+				int(x),
+				int(y),
+				int(y),
+				int(x)
+			)
 		try:
 
 			cursor.execute(q)
