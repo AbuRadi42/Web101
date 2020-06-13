@@ -1,10 +1,10 @@
 import mysql.connector as mySQL
 
 from userAuth import db_connect, credentials
+
 from mysql.connector import errorcode
 
-from flask import session
-# from displayUsers import TheyLikeThem
+from flask import session, redirect
 
 def Notifs():
 
@@ -15,9 +15,9 @@ def Notifs():
 		q = """
 				SELECT *
 				FROM `notifs`
-				WHERE username = '{}'
+				WHERE uId = {}
 			""".format(
-				str(session['userName'])
+				str(session['uId'])
 			)
 
 		try:
@@ -53,130 +53,97 @@ def Notifs():
 	return redirect('/')
 
 #---
-def common_interest(x, y):
-	if TheyLikeThem(x, y) and TheyLikeThem(y, x):
-		return True
-	else:
-		return False
-#---
-def notifList(realName):
 
-	pass
+def notifList():
 
-	# cnx, cursor = db_connect(credentials)
+	cnx, cursor = db_connect(credentials)
 
-	# if (cnx and cursor):
+	if (cnx and cursor):
 
-	# 	q = """
-	# 			SELECT *
-	# 			FROM `notifs`
-	# 			WHERE username = '{}'
+		q = """
+				SELECT content, seen
+				FROM `notifs`
+				WHERE uId = {}
+			""".format(
+				str(session['uId'])
+			)
 
-	# 			ORDER BY notifId DESC
-	# 		""".format(
-	# 			str(session['userName'])
-	# 		)
+		try:
 
-	# 	try:
+			cursor.execute(q)
 
-	# 		cursor.execute(q)
+			R = cursor.fetchall()
 
-	# 		R = cursor.fetchall()
+			q = """
+				UPDATE `notifs`
+				SET seen = 1
+				WHERE uId = {}
+			""".format(
+				str(session['uId'])
+			)
 
-	# 		cnx.close()
+			try:
 
-	# 		rStr = ''
+				cursor.execute(q)
 
-	# 		if len(R) != 0:
+				cnx.commit()
 
-	# 			for i in R:
+			except mySQL.Error as e:
 
-	# 			if i[3] == 1:
-	# 				rstr += ''.join((
-	# 					'<div style="color: %s;">' % 'gray',
-	# 						'<h5 style="font-size: 13.5px">',
-	# 							u' • '
-	# 							+ '%s, ' % note[5:29]
-	# 							+ '%s %s' % (
-	# 								realName,
-	# 								# note[36:]
-	# 							)
-	# 							+ ('... <a href="/%schatingTo%s">reply</a>' % (
-	# 								session['userIdNo'],
-	# 								# note[31:35]
-	# 							) if note[2] == 'm' else ('. <a href="/%sLikesNo%s">like them back</a>' % (
-	# 								session['userIdNo'],
-	# 								# note[31:35]
-	# 							) if not common_interest(
-	# 								session['userIdNo'],
-	# 								# note[31:35]
-	# 							) else '.')),
-	# 						'</h5>',
-	# 					'</div>',
-	# 					'<hr>'
-	# 				))
-	# 			else:
-	# 				rstr += ''.join((
-	# 					'<div style="color: %s;">' % '#303030',
-	# 						'<h5 style="font-size: 13.5px">',
-	# 							u' • '
-	# 							+ '%s, ' % note[4:28]
-	# 							+ '%s %s' % (
-	# 								realName,
-	# 								note[35:]
-	# 							)
-	# 							+ ('... <a href="/%schatingTo%s">reply</a>' % (
-	# 								session['userIdNo'],
-	# 								# note[30:34]
-	# 							) if note[1] == 'm' else ('. <a href="/%sLikesNo%s">like them back</a>' % (
-	# 								session['userIdNo'],
-	# 								# note[30:34]
-	# 							) if not common_interest(
-	# 								session['userIdNo'],
-	# 								# note[30:34]
-	# 							) else '.')),
-	# 						'</h5>',
-	# 					'</div>',
-	# 					'<hr>'
-	# 				))
+				print(e)
 
-	# 				pass
+				cnx.close()
 
-	# 		else:
+				return redirect('/')
 
-	# 			rStr += ''.join((
-	# 				'<div style="text-align: center; color: gray;">',
-	# 					'<h5>',
-	# 						'you don\'t have any notifications yet',
-	# 					'</h5>',
-	# 				'</div>'
-	# 			))
+			cnx.close()
 
-	# 			return rStr
+			if len(R) != 0:
 
-	# 	except mySQL.Error as e:
+				rStr = ''
 
-	# 		print(e)
+				for j in R:
 
-	# 		cnx.close()
+					if j[1] == 1:
 
-	# 		return redirect('/')
+						rStr += ''.join((
+							'<div style="color: %s;">' % 'gray',
+								'<h5 style="font-size: 13.5px; Margin-left: 15px;">',
+									u' • '
+									+ '%s, ' % j[0],
+								'</h5>',
+							'</div>',
+							'<hr>'
+						))
 
-	# return redirect('/')
+					else:
 
-	# rstr = ''
+						rStr += ''.join((
+							'<div style="color: %s;">' % '#303030',
+								'<h5 style="font-size: 13.5px">',
+									u' • '
+									+ '%s, ' % j[0],
+								'</h5>',
+							'</div>',
+							'<hr>'
+						))
 
-	# if bool(notifs) is False:
-	# 	rstr += ''.join((
-	# 		'<div style="text-align: center; color: gray;">',
-	# 			'<h5>',
-	# 				'you don\'t have any notifications yet',
-	# 			'</h5>',
-	# 		'</div>'
-	# 	))
-	# 	return rstr
-	# else:
+			else:
 
+				rStr += ''.join((
+					'<div style="text-align: center; color: gray;">',
+						'<h5>',
+							'you don\'t have any notifications yet',
+						'</h5>',
+					'</div>'
+				))
 
-	# 			r.hset('notifsOf%s' % session['userIdNo'], time, '#' + note) # <- marking seen notifs
-	# 	return rstr
+			return rStr
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')

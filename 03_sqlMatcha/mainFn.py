@@ -397,57 +397,336 @@ def infoChange():
 
 	return index()
 
-# @WebApp.route('/deleteUserRoute')
+@WebApp.route('/deleteUserRoute')
 
-# def deleteUserRoute():
-# 	return render_template('deleteUser.html')
+def deleteUserRoute():
 
-# @WebApp.route('/deleteUser')
+	return render_template('deleteUser.html')
 
-# def deleteUser():
-# 	r.delete(session['userIdNo'])
-# 	print("User No. [\033[1m", end = " ")
-# 	print(session['userIdNo'], end = " ")
-# 	print("\033[0m] just deleted their account")
-# 	session['userIdNo'] = None
-# 	session['loggedIn'] = False
-# 	return index()
+@WebApp.route('/deleteUser')
 
-# @WebApp.route('/<x>LikesNo<y>')
+def deleteUser():
 
-# def xLikesNoY(x, y):
-# 	likes = r.hget(x, 'likes')
-# 	if likes is None:
-# 		likes = ''
-# 	likesArray = likes.split()
-# 	for i in likesArray:
-# 		if i == y:
-# 			unlike(x, y, likesArray)
-# 			return index()
-# 	# else ;
-# 	likes += ' %s' % y
-# 	r.hset(x, 'likes', likes)
-# 	#---
-# 	r.hset(
-# 		y,
-# 		'fameR',
-# 		int(
-# 			r.hget(
-# 				y,
-# 				'fameR'
-# 			)
-# 		) + 1
-# 	)
-# 	r.hset(
-# 		'notifsOf%s' % y,
-# 		str(time()),
-# 		'(l)[%s] %s liked you' % (
-# 			ctime(time()),
-# 			session['userIdNo'],
-# 		)
-# 	)
-# 	#---
-# 	return index()
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				DELETE FROM `users`
+				WHERE username = '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			cnx.commit()
+
+			cnx.close()
+
+			print("User No. [\033[1m", end = " ")
+			print(session['userName'], end = " ")
+			print("\033[0m] just deleted their account")
+			session['userName'] = None
+			session['loggedIn'] = False
+
+			return index()
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return index()
+
+	else:
+
+		return index()
+
+@WebApp.route('/<x>LikesNo<y>')
+
+def xLikesNoY(x, y):
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT `liked`
+				FROM `likes`
+				WHERE liker = {}
+			""".format(
+				str(x)
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			if len(R) == 0:
+
+				q = """
+					INSERT INTO `likes` (
+						liker,
+						liked
+					) VALUES (
+						{},
+						{}
+					)
+				""".format(
+					str(x),
+					str(y)
+				)
+
+				try:
+					cursor.execute(q)
+
+					cnx.commit()
+
+				except mySQL.Error as e:
+
+					print(e)
+
+					cnx.close()
+
+					return redirect('/')
+
+			else:
+
+				R = [i[0] for i in R]
+
+				if int(y) in R:
+
+					q = """
+						DELETE FROM `likes`
+						WHERE liker = {}
+						AND liked = {}
+					""".format(
+						str(x),
+						str(y)
+					)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+					except mySQL.Error as e:
+
+						print(e)
+
+						cnx.close()
+
+						return redirect('/')
+
+					# ---
+
+					q = """
+						UPDATE `users`
+						SET likes = {}
+						WHERE username = '{}'
+					""".format(
+						len(R),
+						str(session['userName'])
+					)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+					except mySQL.Error as e:
+
+						print(e)
+
+						cnx.close()
+
+						return redirect('/')
+
+					# ---
+
+					q = """
+						UPDATE `users`
+						SET fameR = fameR - 1
+						WHERE uId = {}
+					""".format(
+						int(y)
+					)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+					except mySQL.Error as e:
+
+						print(e)
+
+						cnx.close()
+
+						return redirect('/')
+
+				else:
+
+					q = """
+						INSERT INTO `likes` (
+							liker,
+							liked
+						) VALUES (
+							{},
+							{}
+						)
+					""".format(
+						str(x),
+						str(y)
+					)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+					except mySQL.Error as e:
+
+						print(e)
+
+						cnx.close()
+
+						return redirect('/')
+
+					# ---
+
+					q = """
+						UPDATE `users`
+						SET likes = {}
+						WHERE username = '{}'
+					""".format(
+						len(R),
+						str(session['userName'])
+					)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+					except mySQL.Error as e:
+
+						print(e)
+
+						cnx.close()
+
+						return redirect('/')
+
+					# ---
+
+					q = """
+						UPDATE `users`
+						SET fameR = fameR + 1
+						WHERE uId = {}
+					""".format(
+						int(y)
+					)
+
+					try:
+
+						cursor.execute(q)
+
+						cnx.commit()
+
+					except mySQL.Error as e:
+
+						print(e)
+
+						cnx.close()
+
+						return redirect('/')
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+	cnx.close()
+
+	#---
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT `realName`
+				FROM `users`
+				WHERE userName = '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			realName = R[0][0]
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+		q = """
+			INSERT INTO `notifs` (
+				uId,
+				content,
+				seen
+			) VALUES (
+				{},
+				'{}',
+				{}
+			)
+		""".format(
+			str(y),
+			"%s liked your profile (at %s)" % (realName, ctime(time())),
+			0
+		)
+
+		try:
+
+			cursor.execute(q)
+
+			cnx.commit()
+
+			cnx.close()
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			return redirect('/')
+
+	#---
+
+	return redirect('/')
 
 # @WebApp.route('/blockUserNo<y>')
 
@@ -490,17 +769,17 @@ def infoChange():
 # 	r.hset(x, 'hates', h)
 # 	return index()
 
-# #--- Chat & Notifications Mechanisms ;
+#--- Chat & Notifications Mechanisms ;
 
-# @WebApp.route('/notifs')
+@WebApp.route('/notifs')
 
-# def notifListRoute():
-# 	return render_template(
-# 		'notifList.html',
-# 		Home = Home(),
-# 		Notifs = Notifs(),
-# 		notifList = notifList()
-# 	)
+def notifListRoute():
+	return render_template(
+		'notifList.html',
+		Home = Home(),
+		Notifs = Notifs(),
+		notifList = notifList()
+	)
 
 # @WebApp.route('/<x>chatingTo<y>')
 

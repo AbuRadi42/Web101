@@ -173,51 +173,49 @@ def cardPic(pic):
 
 #---
 
-# def TheyLikeThem(x, y):
+def TheyLikeThem(x, y):
 
-# 	cnx, cursor = db_connect(credentials)
+	cnx, cursor = db_connect(credentials)
 
-# 	if (cnx and cursor):
+	if (cnx and cursor):
 
-# 		q = """
-# 				SELECT *
-# 				FROM `users`
-# 				WHERE username = '{}'
-# 			""".format(
-# 				str(session['userName'])
-# 			)
+		q = """
+				SELECT `liked`
+				FROM `likes`
+				WHERE liker = {}
+			""".format(
+				str(x)
+			)
 
-# 		try:
+		try:
 
-# 			cursor.execute(q)
+			cursor.execute(q)
 
-# 			R = cursor.fetchall()
+			R = cursor.fetchall()
 
-# 			cnx.close()
+			cnx.close()
 
-# 			if len(R) != 0:
+			if len(R) != 0:
 
-# 				if R[13] is None:
+				for i in R:
 
-# 					likes = ''
+					if i[0] == y:
 
-# 				likesArray = likes.split(',')
+						return True
 
-# 				for i in likesArray:
+				return False
 
-# 					if i == y:
+			else:
 
-# 						return True
+				return False
 
-# 				return False
+		except mySQL.Error as e:
 
-# 		except mySQL.Error as e:
+			print(e)
 
-# 			print(e)
+			cnx.close()
 
-# 			cnx.close()
-
-# 			return redirect('/')
+			return redirect('/')
 
 #---
 
@@ -241,6 +239,38 @@ def showUsers(usersToLeave):
 
 		for i in usersToLeave : users.remove(i) if i in users else 0
 
+	myInfo = []
+
+	cnx, cursor = db_connect(credentials)
+
+	if (cnx and cursor):
+
+		q = """
+				SELECT *
+				FROM `users`
+				WHERE username = '{}'
+			""".format(
+				str(session['userName'])
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			R = cursor.fetchall()
+
+			cnx.close()
+
+			if len(R) != 0:
+
+				myInfo = R[0]
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
 	# removing blocked & blocking users (another approach):
 
 	# cnx, cursor = db_connect(credentials)
@@ -250,7 +280,7 @@ def showUsers(usersToLeave):
 	# 	q = """
 	# 			SELECT *
 	# 			FROM `hates`
-	# 			WHERE username == '{}'
+	# 			WHERE username = '{}'
 	# 		""".format(
 	# 			str(session['userName'])
 	# 		)
@@ -284,7 +314,7 @@ def showUsers(usersToLeave):
 	# 	q = """
 	# 			SELECT *
 	# 			FROM `hates`
-	# 			WHERE hatedUser == '{}'
+	# 			WHERE hatedUser = '{}'
 	# 		""".format(
 	# 			str(session['userName'])
 	# 		)
@@ -332,10 +362,9 @@ def showUsers(usersToLeave):
 					'</div>',
 					'<div class="likeBtn">',
 						'<a href="/%sLikesNo%s" class="likeBtn" style="color: %s">' % (
-							session['userName'],
+							myInfo[0],
 							str(users[C][0]),
-							'indianred'
-							# 'indianred' if TheyLikeThem(session['userIdNo'], (users[C][0])) else 'lightgray'
+							'indianred' if TheyLikeThem(myInfo[0], users[C][0]) else 'lightgray'
 						),
 							u'♥',
 						'</a>',
@@ -346,8 +375,7 @@ def showUsers(usersToLeave):
 							users[C][2],
 							session['userName'],
 							str(users[C][0]),
-							''
-							# common_interest(session['userIdNo'], (users[C][0]))
+							common_interest(myInfo[0], users[C][0])
 						),
 						'<p>%s</p>' % users[C][10] if users[C][10] is not None else '_',
 					'</div>',

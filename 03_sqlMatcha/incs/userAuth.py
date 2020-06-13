@@ -106,6 +106,7 @@ def userSignUp(userName, realName, password, e_mail, gender, Sexuality):
 					active,
 					likes,
 					hates,
+					fameR,
 					gender,
 					Sexuality
 				) VALUES (
@@ -115,8 +116,9 @@ def userSignUp(userName, realName, password, e_mail, gender, Sexuality):
 					'{}',
 					'{}',
 					0,
-					'',
-					'',
+					0,
+					0,
+					0,
 					{},
 					'{}'
 				)
@@ -194,6 +196,7 @@ def userSignIn(userName, password):
 
 					session['loggedIn'] = True
 					session['userName'] = R[0][1]
+					session['uId'] = R[0][0]
 
 					return redirect('/')
 
