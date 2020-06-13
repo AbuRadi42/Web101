@@ -243,28 +243,6 @@ def userSignIn(userName, password):
 		flash(infoMsg, "warning_login")
 		return render_template("loginForm.html", e = infoMsg)
 
-	# 		r.hset(session["userIdNo"], "Connection", ":  " * 9 + "Online" + "  :" * 9)
-	# 		#---
-	# 		cmd = "curl ipinfo.io/city"
-	# 		status, output = commands.getstatusoutput(cmd)
-	# 		r.hset(session["userIdNo"], "Location", output.splitlines()[-1])
-	# 		#---
-	# 		print("User No. [\033[1m", end = " ")
-	# 		print(session["userIdNo"], end = " ")
-	# 		print("\033[0m] just logged in")
-	# 	else:
-	# 		print("User No. [\033[1m", end = " ")
-	# 		print(hashName, end = " ")
-	# 		print("\033[0m] failed to log in; account isn"t activated yet.")
-	# 		flash("not activated yet!")
-	# else:
-	# 	print("User No. [\033[1m", end = " ")
-	# 	print(hashName, end = " ")
-	# 	print("\033[0m] failed to log in; wrong password.")
-	# 	flash("wrong password!")
-	# if Home() == "<a href="#" class="noPicsHome">Home</a>":
-	# 	return redirect("/profile")
-
 def goneSince(userName, localtime):
 
 	cnx, cursor = db_connect(credentials)
