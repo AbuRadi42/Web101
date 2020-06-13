@@ -1,57 +1,86 @@
-# -*- coding: utf-8 -*-
+import mysql.connector as mySQL
 
-import redis
-
-from collections import OrderedDict
-from time import ctime
-
-r = redis.Redis()
-
-def timeWise(A):
-	x, y = A
-	return x
+from mysql.connector import errorcode
+from userAuth import db_connect, credentials
+from flask import session, redirect
+from time import time, ctime
 
 def MsgsBtwn(x, y):
-	fromXtoY = r.hgetall('%s_to_%s' % (x, y))
-	fromYtoX = r.hgetall('%s_to_%s' % (y, x))
 
-	rstr = ''
+	cnx, cursor = db_connect(credentials)
 
-	if bool(fromXtoY) is False and bool(fromYtoX) is False:
-		rstr += ''.join((
-			'<div style="text-align: center; color: gray;">',
-				'<h5>',
-					'you didn\'t start a conversation with %s yet.' % r.hget(y, 'realName'),
-				'</h5>',
-			'</div>'
-		))
-		return rstr
-	else:
-		if bool(fromXtoY) and bool(fromYtoX):
-			From_X = sorted(fromXtoY.iteritems())
-			From_Y = sorted(fromYtoX.iteritems())
+	if (cnx and cursor):
 
-			From_A = sorted(From_X + From_Y, key = timeWise)
-		elif bool(fromXtoY) and not bool(fromYtoX):
-			From_A = sorted(fromXtoY.iteritems())
-		elif not bool(fromXtoY) and bool(fromYtoX):
-			From_A = sorted(fromYtoX.iteritems())
+		q = """
+				SELECT *
+				FROM `msgs`
+				ORDER BY timedate DESC
+			"""
+		try:
 
-	for c in From_A:
-		time, note = c
-		if len(note) is 0:
-			continue
-		rstr += ''.join((
-			'<div class="Msgs">',
-				'<h5 style="font-size: 13.5px">',
-					'%s : ' % r.hget(note.split('_|_')[0], 'realName')
-					+ note.split('_|_')[1]
-					+ '<br><br><span style="color: gray; float: left;">%s</span>' % (
-						str(ctime(float(time)))
-					),
-				'</h5>',
-			'</div>',
-			'<hr>'
-		))
+			cursor.execute(q)
 
-	return rstr
+			msgs = cursor.fetchall()
+
+			rStr = ""
+
+			q = """
+					SELECT `realName`
+					FROM `users`
+					WHERE `uId` = {}
+				""".format(
+					int(y)
+				)
+
+			try:
+
+				cursor.execute(q)
+
+				R = cursor.fetchall()
+
+				otherName = str(R[0][0])
+
+				cnx.close()
+
+			except mySQL.Error as e:
+
+				print(e)
+
+				cnx.close()
+
+			if len(msgs) != 0:
+
+				for i in msgs:
+
+					if int(i[1]) == int(session["uId"]) or int(i[1]) == int(y):
+
+						rStr += "".join((
+							"<div class=\"Msgs\">",
+								"<h5 style=\"font-size: 13.5px\">",
+									"%s : " % ("you" if int(i[1]) == int(session["uId"]) else otherName)
+									+ i[3]
+									+ "<br><br><span style=\"color: gray; float: left;\">{}</span>".format(i[4]),
+								"</h5>",
+							"</div>",
+							"<hr>"
+						))
+
+			else:
+
+				rStr += "".join((
+					"<div style=\"text-align: center; color: gray;\">",
+						"<h5>",
+							"you didn't start a conversation with %s yet." % otherName,
+						"</h5>",
+					"</div>"
+				))
+
+			return rStr
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+	return redirect("/")

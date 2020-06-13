@@ -27,9 +27,9 @@ def handleUserInfoChange(
 		q = """
 				SELECT *
 				FROM `users`
-				WHERE username = '{}'
+				WHERE username = "{}"
 			""".format(
-				str(session['userName'])
+				str(session["userName"])
 			)
 
 		try:
@@ -56,9 +56,9 @@ def handleUserInfoChange(
 
 			cnx.close()
 
-			return redirect('/')
+			return redirect("/")
 
-	if POST_USERNAME != '' and POST_USERNAME != Crnt_USERNAME:
+	if POST_USERNAME != "" and POST_USERNAME != Crnt_USERNAME:
 
 		cnx, cursor = db_connect(credentials)
 
@@ -67,7 +67,7 @@ def handleUserInfoChange(
 			q = """
 					SELECT *
 					FROM `users`
-					WHERE username = '{}'
+					WHERE username = "{}"
 				""".format(
 					str(POST_USERNAME)
 				)
@@ -84,7 +84,7 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect('/profile')
+					return redirect("/profile")
 
 				else:
 
@@ -94,14 +94,14 @@ def handleUserInfoChange(
 
 						cnx.close()
 
-						return redirect('/profile')
+						return redirect("/profile")
 
 					else:
 
 						q = """
 							UPDATE `users`
-							SET username  = '{}'
-							WHERE username = '{}'
+							SET username  = "{}"
+							WHERE username = "{}"
 						""".format(
 							str(POST_USERNAME),
 							str(Crnt_USERNAME)
@@ -119,9 +119,9 @@ def handleUserInfoChange(
 
 						Crnt_USERNAME = POST_USERNAME
 
-						session['userName'] = Crnt_USERNAME
+						session["userName"] = Crnt_USERNAME
 
-						return redirect('/profile')
+						return redirect("/profile")
 
 			except mySQL.Error as e:
 
@@ -131,7 +131,7 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-				return redirect('/profile')
+				return redirect("/profile")
 
 	if POST_GENDER != Crnt_GENDER:
 
@@ -141,8 +141,8 @@ def handleUserInfoChange(
 
 			q = """
 					UPDATE `users`
-					SET gender  = '{}'
-					WHERE username = '{}'
+					SET gender  = "{}"
+					WHERE username = "{}"
 				""".format(
 					str(POST_GENDER),
 					str(Crnt_USERNAME)
@@ -160,7 +160,7 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-				return redirect('/profile')
+				return redirect("/profile")
 
 			except mySQL.Error as e:
 
@@ -170,9 +170,9 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-				return redirect('/profile')
+				return redirect("/profile")
 
-	if POST_REALNAME != '' and POST_REALNAME != Crnt_REALNAME:
+	if POST_REALNAME != "" and POST_REALNAME != Crnt_REALNAME:
 
 		testName = POST_REALNAME.split()
 
@@ -180,7 +180,7 @@ def handleUserInfoChange(
 
 			print("failed to change; Name & Surname are required")
 
-			return redirect('/profile')
+			return redirect("/profile")
 
 		else:
 
@@ -190,8 +190,8 @@ def handleUserInfoChange(
 
 				q = """
 						UPDATE `users`
-						SET realName  = '{}'
-						WHERE username = '{}'
+						SET realName  = "{}"
+						WHERE username = "{}"
 					""".format(
 						str(POST_REALNAME),
 						str(Crnt_USERNAME)
@@ -209,7 +209,7 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect('/profile')
+					return redirect("/profile")
 
 				except mySQL.Error as e:
 
@@ -219,15 +219,15 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect('/profile')
+					return redirect("/profile")
 
-	if POST_E_MAIL != '' and POST_E_MAIL != Crnt_E_MAIL:
+	if POST_E_MAIL != "" and POST_E_MAIL != Crnt_E_MAIL:
 
 		if not validate_email(POST_E_MAIL):
 
 			print("failed to change; email isn't valid")
 
-			return redirect('/profile')
+			return redirect("/profile")
 
 		else:
 
@@ -237,8 +237,8 @@ def handleUserInfoChange(
 
 				q = """
 						UPDATE `users`
-						SET e_mail  = '{}'
-						WHERE username = '{}'
+						SET e_mail  = "{}"
+						WHERE username = "{}"
 					""".format(
 						str(POST_E_MAIL),
 						str(Crnt_USERNAME)
@@ -256,7 +256,7 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect('/profile')
+					return redirect("/profile")
 
 				except mySQL.Error as e:
 
@@ -266,17 +266,17 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect('/profile')
+					return redirect("/profile")
 
-	if POST_PASSWORD == '' and POST_CONFIRM != '':
-
-		print("failed to change password; unconfirmed password")
-
-	if POST_PASSWORD != '' and POST_CONFIRM == '':
+	if POST_PASSWORD == "" and POST_CONFIRM != "":
 
 		print("failed to change password; unconfirmed password")
 
-	if POST_PASSWORD != '' and POST_CONFIRM != '':
+	if POST_PASSWORD != "" and POST_CONFIRM == "":
+
+		print("failed to change password; unconfirmed password")
+
+	if POST_PASSWORD != "" and POST_CONFIRM != "":
 
 		if POST_PASSWORD != POST_CONFIRM:
 
@@ -327,8 +327,8 @@ def handleUserInfoChange(
 
 					q = """
 							UPDATE `users`
-							SET password  = '{}'
-							WHERE username = '{}'
+							SET password  = "{}"
+							WHERE username = "{}"
 						""".format(
 							str(POST_PASSWORD),
 							str(Crnt_USERNAME)
@@ -354,9 +354,9 @@ def handleUserInfoChange(
 
 						cnx.close()
 
-		return redirect('/profile')
+		return redirect("/profile")
 
-	if Biography != '':
+	if Biography != "":
 
 		cnx, cursor = db_connect(credentials)
 
@@ -364,8 +364,8 @@ def handleUserInfoChange(
 
 			q = """
 					UPDATE `users`
-					SET Biography  = '{}'
-					WHERE username = '{}'
+					SET Biography  = "{}"
+					WHERE username = "{}"
 				""".format(
 					str(Biography),
 					str(Crnt_USERNAME)
@@ -391,9 +391,9 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-		return redirect('/profile')
+		return redirect("/profile")
 
-	if Interests != '':
+	if Interests != "":
 
 		cnx, cursor = db_connect(credentials)
 
@@ -401,8 +401,8 @@ def handleUserInfoChange(
 
 			q = """
 					UPDATE `users`
-					SET Interests  = '{}'
-					WHERE username = '{}'
+					SET Interests  = "{}"
+					WHERE username = "{}"
 				""".format(
 					str(Interests),
 					str(Crnt_USERNAME)
@@ -428,7 +428,7 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-		return redirect('/profile')
+		return redirect("/profile")
 
 	if POST_SEXUALITY != Crnt_SEXUALITY:
 
@@ -438,8 +438,8 @@ def handleUserInfoChange(
 
 			q = """
 					UPDATE `users`
-					SET Sexuality  = '{}'
-					WHERE username = '{}'
+					SET Sexuality  = "{}"
+					WHERE username = "{}"
 				""".format(
 					str(POST_SEXUALITY),
 					str(Crnt_USERNAME)
@@ -465,13 +465,13 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-		return redirect('/profile')
+		return redirect("/profile")
 
 	if ChangeFlag is False:
 
 		print("failed to change; nothing to change")
 
-		return redirect('/profile')
+		return redirect("/profile")
 
 def showBlocked():
 
@@ -482,22 +482,16 @@ def showBlocked():
 		q = """
 				SELECT *
 				FROM `hates`
-				WHERE username == '{}'
+				WHERE hater = {}
 			""".format(
-				str(session['userName'])
+				session["uId"]
 			)
 
 		try:
 
 			cursor.execute(q)
 
-			R = cursor.fetchall()
-
-			hatedList = []
-
-			if len(R) != 0:
-
-				hatedList = [i[2] for i in R]
+			hatedList = cursor.fetchall()
 
 			cnx.close()
 
@@ -507,27 +501,22 @@ def showBlocked():
 
 			cnx.close()
 
-			return redirect('/')
+			return redirect("/profile")
 
 	if len(hatedList) is 0:
 
-		return ''
+		return ""
 
-	hatedList = hatedList.split(',')
+	rStr = ""
 
-	rStr = ''
+	for i in hatedList:
 
-	# index = 1
-	# while index < len(hates):
-	# 	line = hates[index].split('_Y_')
-	# 	rStr += ''.join((
-	# 		'<h5 class="blockedList">',
-	# 			u'•'
-	# 			+ ' [<a href="/unblockUserNo%s">unBlock</a>] ' % line[0]
-	# 			+ r.hget(line[0], 'realName')
-	# 			+ (', ' + line[1] if line[1] != '#NoReason' else ''),
-	# 		'</h5>'
-	# 	))
-	# 	index += 1
+		rStr += "".join((
+			"<h5 class=\"blockedList\">",
+				u"•"
+				+ " [<a href=\"/unblockUserNo%s\">unBlock</a>] " % i[2] + i[4]
+				+ (", " + i[3] if i[4] != "#NoReason" else ""),
+			"</h5>"
+		))
 
 	return rStr
