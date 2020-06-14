@@ -12,7 +12,7 @@ def sendVerificationText(e_mail, userIdNo):
 	_subject = "Matcha's Account Verification"
 	_text = "".join((
 		"<p>",
-			"Matcha's team Thanks you for signing up.",
+			"Matcha's team thanks you for signing up.",
 			"<br>",
 			"<br>",
 			"Please click <a href=\"%s\">here</a> to activate your account." % (

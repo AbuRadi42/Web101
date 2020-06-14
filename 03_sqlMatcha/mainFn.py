@@ -1142,21 +1142,45 @@ def signup():
 
 def verify(y):
 
-	# crntStatus = r.hget(y, "active")
+	cnx, cursor = db_connect(credentials)
 
-	# if crntStatus is None:
-	# 	print("failed to verify; user doesn't exist")
-	# 	return index()
-	# elif crntStatus == "1":
-	# 	print("failed to verify; user is already verified")
-	# 	return index()
-	# elif crntStatus == "0":
-	# 	r.hset(y, "active", 1)
-	# 	print("verification of %s is successful" % y)
-	# 	return index()
-	# else:
-	# 	print("failed to verify; check your Redis connection")
-	# 	return index()
+	# return str((cnx, cursor))
+
+	if (cnx and cursor):
+
+		q = """
+				UPDATE `users`
+				SET active = 1
+				WHERE uId = {}
+			""".format(
+				int(y)
+			)
+
+		try:
+
+			cursor.execute(q)
+
+			cnx.commit()
+
+			cnx.close()
+
+			return 1
+
+		except mySQL.Error as e:
+
+			print(e)
+
+			cnx.close()
+
+			infoMsg = "SQL failure..."
+			flash(infoMsg, "warning_login")
+			return render_template("loginForm.html", e = infoMsg)
+
+	else:
+
+		infoMsg = "SQL failure..."
+		flash(infoMsg, "warning_login")
+		return render_template("loginForm.html", e = infoMsg)
 
 	pass
 
