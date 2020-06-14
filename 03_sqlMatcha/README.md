@@ -1,6 +1,6 @@
 # Matcha (WeThinkCode_)
 
-This app is developed for the final assessment at [WeThinkCode_](https://www.wethinkcode.co.za) to qualify for SETA nqf5, 
+Matcha is an École 42 project based on badoo dating-focused social network, this app is developed for the final assessment at [WeThinkCode_](https://www.wethinkcode.co.za) to qualify for SETA nqf5, 
 
 ## Setting Up
 
