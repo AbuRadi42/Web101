@@ -1164,7 +1164,7 @@ def verify(y):
 
 			cnx.close()
 
-			return 1
+			return index()
 
 		except mySQL.Error as e:
 

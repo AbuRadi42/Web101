@@ -213,9 +213,27 @@ def userSignIn(userName, password):
 
 					cnx.commit()
 
+					q = """
+							SELECT `pic`
+							FROM `users`
+							WHERE uId = {}
+						""".format(
+							session["uId"]
+						)
+
+					cursor.execute(q)
+
+					R = cursor.fetchall()
+
 					cnx.close()
 
-					return redirect("/")
+					if R == [(None,)]:
+
+						return redirect("/profile")
+
+					else:
+
+						return redirect("/")
 
 				else:
 

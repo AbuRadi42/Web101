@@ -7,7 +7,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 def sendVerificationText(e_mail, userIdNo):
-	_from = "team@matcha.co.za"
+	_from = "AbuRadi42Sam@gmail.com"
 	_to = e_mail
 	_subject = "Matcha's Account Verification"
 	_text = "".join((
