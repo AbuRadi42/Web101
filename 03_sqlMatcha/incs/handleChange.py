@@ -82,8 +82,6 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect("/profile")
-
 				else:
 
 					if len(POST_USERNAME) < 5:
@@ -91,8 +89,6 @@ def handleUserInfoChange(
 						print("failed to change; userName is shorter than 5 characters")
 
 						cnx.close()
-
-						return redirect("/profile")
 
 					else:
 
@@ -119,8 +115,6 @@ def handleUserInfoChange(
 
 						session["userName"] = Crnt_USERNAME
 
-						return redirect("/profile")
-
 			except mySQL.Error as e:
 
 				print(q)
@@ -128,8 +122,6 @@ def handleUserInfoChange(
 				print(e)
 
 				cnx.close()
-
-				return redirect("/profile")
 
 	if POST_GENDER != Crnt_GENDER:
 
@@ -158,8 +150,6 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-				return redirect("/profile")
-
 			except mySQL.Error as e:
 
 				print(q)
@@ -177,8 +167,6 @@ def handleUserInfoChange(
 		if len(testName) < 2:
 
 			print("failed to change; Name & Surname are required")
-
-			return redirect("/profile")
 
 		else:
 
@@ -207,8 +195,6 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect("/profile")
-
 				except mySQL.Error as e:
 
 					print(q)
@@ -217,15 +203,11 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect("/profile")
-
 	if POST_E_MAIL != "" and POST_E_MAIL != Crnt_E_MAIL:
 
 		if not validate_email(POST_E_MAIL):
 
 			print("failed to change; email isn't valid")
-
-			return redirect("/profile")
 
 		else:
 
@@ -254,8 +236,6 @@ def handleUserInfoChange(
 
 					cnx.close()
 
-					return redirect("/profile")
-
 				except mySQL.Error as e:
 
 					print(q)
@@ -263,8 +243,6 @@ def handleUserInfoChange(
 					print(e)
 
 					cnx.close()
-
-					return redirect("/profile")
 
 	if POST_PASSWORD == "" and POST_CONFIRM != "":
 
@@ -352,8 +330,6 @@ def handleUserInfoChange(
 
 						cnx.close()
 
-		return redirect("/profile")
-
 	if Biography != "":
 
 		cnx, cursor = db_connect(credentials)
@@ -388,8 +364,6 @@ def handleUserInfoChange(
 				print(e)
 
 				cnx.close()
-
-		return redirect("/profile")
 
 	if Interests != "":
 
@@ -426,8 +400,6 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-		return redirect("/profile")
-
 	if POST_SEXUALITY != Crnt_SEXUALITY:
 
 		cnx, cursor = db_connect(credentials)
@@ -463,13 +435,11 @@ def handleUserInfoChange(
 
 				cnx.close()
 
-		return redirect("/profile")
-
 	if ChangeFlag is False:
 
 		print("failed to change; nothing to change")
 
-		return redirect("/profile")
+	return redirect("/profile")
 
 def showBlocked():
 

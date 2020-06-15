@@ -479,7 +479,7 @@ def xLikesNoY(x, y):
 				FROM `likes`
 				WHERE liker = {}
 			""".format(
-				str(x)
+				int(x)
 			)
 
 		try:
@@ -520,6 +520,8 @@ def xLikesNoY(x, y):
 
 				R = [i[0] for i in R]
 
+				print(R)
+
 				if int(y) in R:
 
 					q = """
@@ -549,32 +551,7 @@ def xLikesNoY(x, y):
 
 					q = """
 						UPDATE `users`
-						SET likes = {}
-						WHERE username = "{}"
-					""".format(
-						len(R),
-						str(session["userName"])
-					)
-
-					try:
-
-						cursor.execute(q)
-
-						cnx.commit()
-
-					except mySQL.Error as e:
-
-						print(e)
-
-						cnx.close()
-
-						return redirect("/")
-
-					# ---
-
-					q = """
-						UPDATE `users`
-						SET fameR = fameR - 1
+						SET `fameR` = `fameR` - 1
 						WHERE uId = {}
 					""".format(
 						int(y)
@@ -592,7 +569,7 @@ def xLikesNoY(x, y):
 
 						cnx.close()
 
-						return redirect("/")
+					# ---
 
 				else:
 
@@ -621,38 +598,11 @@ def xLikesNoY(x, y):
 
 						cnx.close()
 
-						return redirect("/")
-
 					# ---
 
 					q = """
 						UPDATE `users`
-						SET likes = {}
-						WHERE username = "{}"
-					""".format(
-						len(R),
-						str(session["userName"])
-					)
-
-					try:
-
-						cursor.execute(q)
-
-						cnx.commit()
-
-					except mySQL.Error as e:
-
-						print(e)
-
-						cnx.close()
-
-						return redirect("/")
-
-					# ---
-
-					q = """
-						UPDATE `users`
-						SET fameR = fameR + 1
+						SET `fameR` = `fameR` + 1
 						WHERE uId = {}
 					""".format(
 						int(y)
@@ -670,15 +620,13 @@ def xLikesNoY(x, y):
 
 						cnx.close()
 
-						return redirect("/")
+					# ---
 
 		except mySQL.Error as e:
 
 			print(e)
 
 			cnx.close()
-
-			return redirect("/")
 
 	cnx.close()
 
@@ -741,8 +689,6 @@ def xLikesNoY(x, y):
 			print(e)
 
 			cnx.close()
-
-			return redirect("/")
 
 	#---
 
