@@ -30,7 +30,7 @@ def sendVerificationText(e_mail, userIdNo):
 		html_content = _text
 	)
 	try:
-		sg = SendGridAPIClient("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")
+		sg = SendGridAPIClient("*")
 		response = sg.send(message)
 		print(response.status_code)
 		print(response.body)
